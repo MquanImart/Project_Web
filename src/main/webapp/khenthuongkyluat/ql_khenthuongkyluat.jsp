@@ -23,7 +23,7 @@
 </head>
 
 <body>
-<%taikhoan username = (taikhoan) session.getAttribute("user"); %>
+<%taikhoan username = (taikhoan) session.getAttribute("user");%>
 <%if (username == null) {%>
 <jsp:forward page="/login/login.jsp"></jsp:forward>
 <%} else {%>
@@ -251,7 +251,6 @@
 						var input, filter, table, box_content, i, txtValue;
 						input = document.getElementById("search");
 						filter = input.value.toUpperCase();
-
 						table = document.getElementById("container");
 						box_content = table.getElementsByTagName("form");
 						for (i = 0; i < box_content.length; i++) {

@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="form-group mx-2">
                                     <label for="select_macn" class="mr-2"> Mã chi nhánh:</label>
-                                    <select class="form-control form-control-sm box_search" id = "select_macn"  onchange="updatePhongBanList(); Search_textbox();">
+                                    <select class="form-control form-control-sm box_search" id = "select_macn"  onchange="updatePhongBanList(); Search_combobox();">
                                         <option value="ALL">Tất cả</option>
                                         <c:forEach var="item" items="${setmacn_nv}">
                                             <option value="<c:out value="${item}" />">${item}</option>
@@ -86,7 +86,7 @@
                                 </div>
                                 <div class="form-group mx-2">
                                     <label for="select_mapb" class="mr-2"> Mã phòng ban:</label>
-                                    <select class="form-control form-control-sm box_search" id = "select_mapb" onchange = "Search_textbox()" >
+                                    <select class="form-control form-control-sm box_search" id = "select_mapb" onchange = "Search_combobox()" >
                                         <option value="ALL">Tất cả</option>
                                         <c:forEach var="item" items="${setmapb_nv}">
                                             <option value="<c:out value="${item}" />">${item}</option>
@@ -306,7 +306,7 @@
                                 }
                             }
                         }
-                        function Search_textbox() {
+                        function Search_combobox() {
                             var input, filter, table, tr, td, i, txtValue;
                             input = document.getElementById("search");
                             filter = input.value.toUpperCase();
