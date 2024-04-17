@@ -163,11 +163,6 @@
 							</div>
 						</div>
 					</div>
-					<div>
-						<button class="button_luu" formaction="<%=request.getContextPath()%>/thaydoithongtin"  id="btn_save">
-							<i class="fa-solid fa-floppy-disk fa-2xl"></i>
-						</button>
-					</div>
                     <div class = "box_button_add" id = "btnadd">
 						<button class = "button_text" type="submit">Lưu thay đổi</button>
 					</div>
