@@ -32,7 +32,6 @@ public class loginController extends HttpServlet {
     // Tạo một số ngẫu nhiên gồm 6 chữ số
     Random rand = new Random();
     private String maOtp = "";
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getServletPath();
