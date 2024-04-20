@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Random;
 
-import javax.mail.internet.AddressException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -13,6 +12,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 import javax.mail.*;
 
@@ -29,6 +33,12 @@ public class loginController extends HttpServlet {
     public void init() {
         loginDao = new loginDAO();
     }
+
+    // Chỉnh sửa
+    private static final int TIME_STEP_SECONDS = 60;
+    private static final int TOTP_LENGTH = 6;
+    // Chỉnh sửa
+
     // Tạo một số ngẫu nhiên gồm 6 chữ số
     Random rand = new Random();
     private String maOtp = "";
@@ -41,7 +51,13 @@ public class loginController extends HttpServlet {
                 authenticate(request, response);
                 break;
             case "/forgot_post":
-                NewPass(request, response);
+                try {
+                    NewPass(request, response);
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                } catch (InvalidKeyException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             case "/change_post":
                 ChangePass(request, response);
@@ -67,7 +83,7 @@ public class loginController extends HttpServlet {
                     Forgotpass(request, response);
                     break;
             }
-        }catch (SQLException ex)
+        }catch (SQLException | NoSuchAlgorithmException | InvalidKeyException ex)
         {throw new ServletException(ex);}
     }
     private void authenticate(HttpServletRequest request, HttpServletResponse response)
@@ -83,37 +99,31 @@ public class loginController extends HttpServlet {
             HttpSession session = request.getSession();
             taikhoan tk = loginDao.validate(loginModel);
             session.setAttribute("user", tk);
-            if (tk != null) {
-                boolean tinhtrang = loginDAO.layTinhTrang(tk.getMatk());
-                if (tinhtrang == true) {
-                    int capbac = chucvuDAO.CapBacQuyenHan(tk.getMatk()); // 0 nhanvien 1 truong phong 2 giam doc 3 admin
+            boolean tinhtrang = loginDAO.layTinhTrang(tk.getMatk());
+            System.out.println(tinhtrang);
+            if (tk != null && tinhtrang==true) {
+                int capbac = chucvuDAO.CapBacQuyenHan(tk.getMatk()); // 0 nhanvien 1 truong phong 2 giam doc 3 admin
 
-                    session.setAttribute("capbac", capbac);
+                session.setAttribute("capbac",capbac);
 
-                    nhanvien thongtinnv = qlnhanvienDAO.LayThongTinNhanVien(tk.getMatk());
-                    session.setAttribute("thongtinnv", thongtinnv);
+                nhanvien thongtinnv = qlnhanvienDAO.LayThongTinNhanVien(tk.getMatk());
+                session.setAttribute("thongtinnv", thongtinnv);
 
-                    String tenchucvu = chucvuDAO.TenCapBac(tk.getMatk());
-                    session.setAttribute("tencapbac_header", tenchucvu);
+                String tenchucvu = chucvuDAO.TenCapBac(tk.getMatk());
+                session.setAttribute("tencapbac_header", tenchucvu);
 
-                    phongban ttphongban = phongbanDAO.selectPhongBan(thongtinnv.getMapb());
-                    session.setAttribute("phongban_header", ttphongban);
+                phongban ttphongban = phongbanDAO.selectPhongBan(thongtinnv.getMapb());
+                session.setAttribute("phongban_header", ttphongban);
 
-                    chinhanh inf_chinhanh = chinhanhDAO.selectChiNhanh(thongtinnv.getMacn());
-                    session.setAttribute("chinhanh_header", inf_chinhanh);
+                chinhanh inf_chinhanh = chinhanhDAO.selectChiNhanh(thongtinnv.getMacn());
+                session.setAttribute("chinhanh_header", inf_chinhanh);
 
-                    thongtincanhan tennv = thongtincanhanDAO.layThongTinCaNhan(tk.getMatk());
-                    session.setAttribute("tennhanvien_menu", tennv);
+                thongtincanhan tennv = thongtincanhanDAO.layThongTinCaNhan(tk.getMatk());
+                session.setAttribute("tennhanvien_menu", tennv);
 
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/trangchu");
-                    dispatcher.forward(request, response);
-                } else {
-                    request.setAttribute("error", "Tài khoản không hoạt động");
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
-                    dispatcher.forward(request, response);
-                }
-            }
-            else {
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/trangchu");
+                dispatcher.forward(request, response);
+            } else {
                 request.setAttribute("error", "Thông tin đăng nhập không hợp lệ");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                 dispatcher.forward(request, response);
@@ -124,8 +134,43 @@ public class loginController extends HttpServlet {
         }
     }
 
+    // Chỉnh sửa
+    private String generateSecretKey() {
+        Random rand = new Random();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 20; i++) {
+            sb.append((char) (rand.nextInt(26) + 'a'));
+        }
+        return sb.toString();
+    }
+    private String generateTotp(String secretKey) throws NoSuchAlgorithmException, InvalidKeyException {
+        byte[] keyBytes = secretKey.getBytes();
+        byte[] data = new byte[8];
+        long value = System.currentTimeMillis() / 1000 / TIME_STEP_SECONDS;
+        for (int i = 7; value > 0; i--) {
+            data[i] = (byte) (value & 0xff);
+            value >>= 8;
+        }
+
+        SecretKeySpec key = new SecretKeySpec(keyBytes, "HmacSHA1");
+        Mac mac = Mac.getInstance("HmacSHA1");
+        mac.init(key);
+
+        byte[] hash = mac.doFinal(data);
+
+        int offset = hash[hash.length - 1] & 0xF;
+        int binary = ((hash[offset] & 0x7f) << 24)
+                | ((hash[offset + 1] & 0xff) << 16)
+                | ((hash[offset + 2] & 0xff) << 8)
+                | (hash[offset + 3] & 0xff);
+        int otp = binary % (int) Math.pow(10, TOTP_LENGTH);
+
+        return String.format("%0" + TOTP_LENGTH + "d", otp);
+    }
+    // Chỉnh sửa
+
     private void Forgotpass(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException{
+            throws IOException, ServletException, NoSuchAlgorithmException, InvalidKeyException {
 
         String host;
         String port;
@@ -138,8 +183,15 @@ public class loginController extends HttpServlet {
         user = context.getInitParameter("user");
         pass = context.getInitParameter("pass");
 
-        int random = rand.nextInt((999999 - 100000) + 1) + 100000;
-        maOtp = Integer.toString(random);
+
+        // Chỉnh sửa
+        String secretKey = generateSecretKey();
+        HttpSession session = request.getSession();
+        session.setAttribute("secretKey", secretKey);
+
+        maOtp = generateTotp(secretKey);
+        // Chỉnh sửa
+
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String subject = "Mã OTP xác nhận của bạn là:";
@@ -168,27 +220,31 @@ public class loginController extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
-
+    private boolean verifyTotp(String secretKey, String otp) throws NoSuchAlgorithmException, InvalidKeyException {
+        String generatedTotp = generateTotp(secretKey);
+        return otp.equals(generatedTotp);
+    }
     private void NewPass(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException{
+            throws IOException, ServletException, NoSuchAlgorithmException, InvalidKeyException {
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String otp = request.getParameter("otp");
         String newpassword = request.getParameter("newpassword");
 
-        taikhoan usernameModel = new taikhoan();
-        usernameModel.setUsername(username);
-        thongtincanhan emailModel = new thongtincanhan();
-        emailModel.setEmail(email);
+        HttpSession session = request.getSession();
+        String secretKey = (String) session.getAttribute("secretKey");
 
-        if(!otp.equals(maOtp))
-        {
-            maOtp = null;
+        if (!verifyTotp(secretKey, otp)) {
             request.setAttribute("error", "Mã OTP không trùng khớp!");
             RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
             dispatcher.forward(request, response);
             return;
         }
+
+        taikhoan usernameModel = new taikhoan();
+        usernameModel.setUsername(username);
+        thongtincanhan emailModel = new thongtincanhan();
+        emailModel.setEmail(email);
 
         try {
             boolean ischanged = forgotDao.changePass(usernameModel, emailModel, newpassword);
@@ -205,7 +261,6 @@ public class loginController extends HttpServlet {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private void ChangePass(HttpServletRequest request, HttpServletResponse response)
