@@ -109,6 +109,22 @@
             <version>2.14.1</version>
         </dependency>
 
+
+
+        <!-- Ham bam bcrypt -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+            <version>5.5.0</version> <!-- Thay đổi phiên bản tùy thuộc vào phiên bản bạn sử dụng -->
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+
+
     </dependencies>
     <build>
         <plugins>
