@@ -105,6 +105,7 @@ public class loginController extends HttpServlet {
                     thongtincanhan tennv = thongtincanhanDAO.layThongTinCaNhan(tk.getMatk());
                     session.setAttribute("tennhanvien_menu", tennv);
 
+                    Log.logger.info("Đăng nhập thành công: " + tk.getUsername());
                     RequestDispatcher dispatcher = request.getRequestDispatcher("/trangchu");
                     dispatcher.forward(request, response);
                 } else {
@@ -120,6 +121,7 @@ public class loginController extends HttpServlet {
             }
 
         } catch (ClassNotFoundException e) {
+            Log.logger.error("Đăng nhập thất bại: " + e);
             e.printStackTrace();
         }
     }
@@ -155,6 +157,7 @@ public class loginController extends HttpServlet {
                 forgotDao.sendEmail(host, port, user, pass, email, subject, maOtp);
                 request.setAttribute("inputUsername", username);
                 request.setAttribute("inputEmail", email);
+                Log.logger.info("Quên Mật khẩu: " + username);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/login/forgot.jsp");
                 dispatcher.forward(request, response);
             }

@@ -108,6 +108,9 @@
 									<input type="password" class="control_more" id="pass" placeholder="Mật khẩu" name="pass" value="${taikhoan.pass}" readonly required>
 									<button type="button" class="button_icon_small" onclick="showPass();"><i class="fa-solid fa-eye fa-sm"></i></button>
 								</div>
+								<div class="error_mess" id = "error_pass" style="color:red;">
+									<p></p>
+								</div>
 							</div>
 						</div>
 
@@ -223,6 +226,14 @@
 						</div>
 					</div>
                 </form>
+				<%String errorMsg = (String) request.getAttribute("error_add"); %>
+				<%if (errorMsg != null) { %>
+				<div class="form_tacvu" id="msg" style="display: block; top: 300px; left: 600px; width: 300px; height: 100px;">
+					<h3><%=errorMsg %></h3>
+					<button type="button" onclick="closeFormMsg()">Xác Nhận</button>
+				</div>
+				<%} %>
+
 				<script>
 
 					window.onload = function() {
@@ -242,6 +253,50 @@
 						document.getElementById("chucvu").setAttribute("readonly", true);
 						</c:if>
 					};
+					document.getElementById("pass").addEventListener("input", kiemTraMatKhau);
+					function kiemTraMatKhau() {
+						let matKhau = document.getElementById("pass").value;
+						let errorDiv = document.getElementById("error_pass");
+						errorDiv.innerHTML = "";
+						let errorMessage = "";
+						if (matKhau.length < 8) {
+							errorMessage = "Mật khẩu phải chứa ít nhất 8 kí tự.";
+							errorDiv.innerHTML = "<p>" + errorMessage + "</p>";
+							return;
+						}
+						var patternChuHoa = /[A-Z]/;
+						if (!patternChuHoa.test(matKhau)) {
+							errorMessage = "Mật khẩu phải chứa ít nhất 1 chữ hoa.";
+							errorDiv.innerHTML = "<p>" + errorMessage + "</p>";
+							return false;
+						}
+						var patternChuThuong = /[a-z]/;
+						if (!patternChuThuong.test(matKhau)) {
+							errorMessage = "Mật khẩu phải chứa ít nhất 1 chữ thường.";
+							errorDiv.innerHTML = "<p>" + errorMessage + "</p>";
+							return false;
+						}
+						var patternChuSo = /\d/;
+						if (!patternChuSo.test(matKhau)) {
+							errorMessage = "Mật khẩu phải chứa ít nhất 1 chữ số.";
+							errorDiv.innerHTML = "<p>" + errorMessage + "</p>";
+							return false;
+						}
+						var patternKiTuDacBiet = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+						if (!patternKiTuDacBiet.test(matKhau)) {
+							errorMessage = "Mật khẩu phải chứa ít nhất 1 kí tự đặc biệt.";
+							errorDiv.innerHTML = "<p>" + errorMessage + "</p>";
+							return false;
+						}
+						return true;
+					}
+					function openFormMsg() {
+						document.getElementById("msg").style.display = "block";
+					}
+
+					function closeFormMsg() {
+						document.getElementById("msg").style.display = "none";
+					}
 					function openFormCC() {
 						document.getElementById("xemcc").style.display = "block";
 					}
