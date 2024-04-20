@@ -98,31 +98,37 @@ public class loginController extends HttpServlet {
             HttpSession session = request.getSession();
             taikhoan tk = loginDao.validate(loginModel);
             session.setAttribute("user", tk);
-            boolean tinhtrang = loginDAO.layTinhTrang(tk.getMatk());
-            System.out.println(tinhtrang);
-            if (tk != null && tinhtrang==true) {
-                int capbac = chucvuDAO.CapBacQuyenHan(tk.getMatk()); // 0 nhanvien 1 truong phong 2 giam doc 3 admin
+            if (tk != null) {
+                boolean tinhtrang = loginDAO.layTinhTrang(tk.getMatk());
+                if (tinhtrang==true) {
+                    int capbac = chucvuDAO.CapBacQuyenHan(tk.getMatk()); // 0 nhanvien 1 truong phong 2 giam doc 3 admin
 
-                session.setAttribute("capbac",capbac);
+                    session.setAttribute("capbac",capbac);
 
-                nhanvien thongtinnv = qlnhanvienDAO.LayThongTinNhanVien(tk.getMatk());
-                session.setAttribute("thongtinnv", thongtinnv);
+                    nhanvien thongtinnv = qlnhanvienDAO.LayThongTinNhanVien(tk.getMatk());
+                    session.setAttribute("thongtinnv", thongtinnv);
 
-                String tenchucvu = chucvuDAO.TenCapBac(tk.getMatk());
-                session.setAttribute("tencapbac_header", tenchucvu);
+                    String tenchucvu = chucvuDAO.TenCapBac(tk.getMatk());
+                    session.setAttribute("tencapbac_header", tenchucvu);
 
-                phongban ttphongban = phongbanDAO.selectPhongBan(thongtinnv.getMapb());
-                session.setAttribute("phongban_header", ttphongban);
+                    phongban ttphongban = phongbanDAO.selectPhongBan(thongtinnv.getMapb());
+                    session.setAttribute("phongban_header", ttphongban);
 
-                chinhanh inf_chinhanh = chinhanhDAO.selectChiNhanh(thongtinnv.getMacn());
-                session.setAttribute("chinhanh_header", inf_chinhanh);
+                    chinhanh inf_chinhanh = chinhanhDAO.selectChiNhanh(thongtinnv.getMacn());
+                    session.setAttribute("chinhanh_header", inf_chinhanh);
 
-                thongtincanhan tennv = thongtincanhanDAO.layThongTinCaNhan(tk.getMatk());
-                session.setAttribute("tennhanvien_menu", tennv);
+                    thongtincanhan tennv = thongtincanhanDAO.layThongTinCaNhan(tk.getMatk());
+                    session.setAttribute("tennhanvien_menu", tennv);
 
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/trangchu");
-                dispatcher.forward(request, response);
-            } else {
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/trangchu");
+                    dispatcher.forward(request, response);
+                } else {
+                    request.setAttribute("error", "Tài khoản đã bị khóa");
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                    dispatcher.forward(request, response);
+                }
+            }
+            else {
                 request.setAttribute("error", "Thông tin đăng nhập không hợp lệ");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                 dispatcher.forward(request, response);

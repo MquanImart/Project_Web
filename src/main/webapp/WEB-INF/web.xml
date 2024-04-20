@@ -23,6 +23,9 @@
         <param-value>owgr culp dizl hvwa</param-value>
     </context-param>
 
+    <listener>
+        <listener-class>Log4j.Log4jServletContextListener</listener-class>
+    </listener>
 
     <welcome-file-list>
         <welcome-file>login/login.jsp</welcome-file>
