@@ -38,7 +38,7 @@
 			<img src="https://www.evn.com.vn/userfile/VH/User/huyent_tcdl/images/2021/6/hrmscuatapdoan24621(1).jpeg" style="width:700px;height:460px;">
 		</div>
 		<div class="form">
-		<form action="<%=request.getContextPath()%>/login_post" method="POST">
+		<form action="<%=request.getContextPath()%>/login_post" method="POST" onsubmit="encryptPassword()">
             <h1>ĐĂNG NHẬP</h1>
             <div class="input-box">
 				<div class = "box_icon_login"><i class="fa-solid fa-user fa-2xl"></i></div>
@@ -67,6 +67,7 @@
     	</div>
 	</div>
 	<script>
+
 		function showpass() {
 			var x = document.getElementById("password");
 			if (x.type === "password") {
