@@ -24,8 +24,12 @@ import DAO.*;
 
 import Model.*;
 import DAO.chucvuDAO;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 @WebServlet(name = "login", urlPatterns = { "/login", "/forgot", "/change","/sendmail","/login_post","/forgot_post","/change_post"})
 public class loginController extends HttpServlet {
+    private static final Logger logger = LogManager.getLogger(loginController.class);
     private static final long serialVersionUID = 1L;
     private loginDAO loginDao;
     private changeDAO changeDao = new changeDAO();
@@ -120,15 +124,19 @@ public class loginController extends HttpServlet {
                     thongtincanhan tennv = thongtincanhanDAO.layThongTinCaNhan(tk.getMatk());
                     session.setAttribute("tennhanvien_menu", tennv);
 
+                    logger.info("Success login: " + username);
+
                     RequestDispatcher dispatcher = request.getRequestDispatcher("/trangchu");
                     dispatcher.forward(request, response);
                 } else {
+                    logger.info("Failed login: " + username);
                     request.setAttribute("error", "Tài khoản đã bị khóa");
                     RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                     dispatcher.forward(request, response);
                 }
             }
             else {
+                logger.info("Failed login");
                 request.setAttribute("error", "Thông tin đăng nhập không hợp lệ");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                 dispatcher.forward(request, response);
