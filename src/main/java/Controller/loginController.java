@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -91,6 +92,7 @@ public class loginController extends HttpServlet {
     }
     private void authenticate(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
@@ -102,46 +104,54 @@ public class loginController extends HttpServlet {
             HttpSession session = request.getSession();
             taikhoan tk = loginDao.validate(loginModel);
             session.setAttribute("user", tk);
-            if (tk != null) {
-                boolean tinhtrang = loginDAO.layTinhTrang(tk.getMatk());
-                if (tinhtrang==true) {
-                    int capbac = chucvuDAO.CapBacQuyenHan(tk.getMatk()); // 0 nhanvien 1 truong phong 2 giam doc 3 admin
-
-                    session.setAttribute("capbac",capbac);
-
-                    nhanvien thongtinnv = qlnhanvienDAO.LayThongTinNhanVien(tk.getMatk());
-                    session.setAttribute("thongtinnv", thongtinnv);
-
-                    String tenchucvu = chucvuDAO.TenCapBac(tk.getMatk());
-                    session.setAttribute("tencapbac_header", tenchucvu);
-
-                    phongban ttphongban = phongbanDAO.selectPhongBan(thongtinnv.getMapb());
-                    session.setAttribute("phongban_header", ttphongban);
-
-                    chinhanh inf_chinhanh = chinhanhDAO.selectChiNhanh(thongtinnv.getMacn());
-                    session.setAttribute("chinhanh_header", inf_chinhanh);
-
-                    thongtincanhan tennv = thongtincanhanDAO.layThongTinCaNhan(tk.getMatk());
-                    session.setAttribute("tennhanvien_menu", tennv);
-
-                    logger.info("Success login: " + username);
-
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/trangchu");
-                    dispatcher.forward(request, response);
-                } else {
-                    logger.info("Failed login: " + username);
-                    request.setAttribute("error", "Tài khoản đã bị khóa");
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
-                    dispatcher.forward(request, response);
-                }
-            }
-            else {
+            String csrfToken = request.getParameter("csrfToken");
+            String sessionToken = (String) session.getAttribute("csrfToken");
+            if (csrfToken == null || !csrfToken.equals(sessionToken)) {
                 logger.info("Failed login");
                 request.setAttribute("error", "Thông tin đăng nhập không hợp lệ");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                 dispatcher.forward(request, response);
-            }
+            } else {
+                if (tk != null) {
+                    boolean tinhtrang = loginDAO.layTinhTrang(tk.getMatk());
+                    if (tinhtrang==true) {
+                        int capbac = chucvuDAO.CapBacQuyenHan(tk.getMatk()); // 0 nhanvien 1 truong phong 2 giam doc 3 admin
 
+                        session.setAttribute("capbac",capbac);
+
+                        nhanvien thongtinnv = qlnhanvienDAO.LayThongTinNhanVien(tk.getMatk());
+                        session.setAttribute("thongtinnv", thongtinnv);
+
+                        String tenchucvu = chucvuDAO.TenCapBac(tk.getMatk());
+                        session.setAttribute("tencapbac_header", tenchucvu);
+
+                        phongban ttphongban = phongbanDAO.selectPhongBan(thongtinnv.getMapb());
+                        session.setAttribute("phongban_header", ttphongban);
+
+                        chinhanh inf_chinhanh = chinhanhDAO.selectChiNhanh(thongtinnv.getMacn());
+                        session.setAttribute("chinhanh_header", inf_chinhanh);
+
+                        thongtincanhan tennv = thongtincanhanDAO.layThongTinCaNhan(tk.getMatk());
+                        session.setAttribute("tennhanvien_menu", tennv);
+
+                        logger.info("Success login: " + username);
+
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("/trangchu");
+                        dispatcher.forward(request, response);
+                    } else {
+                        logger.info("Failed login: " + username);
+                        request.setAttribute("error", "Tài khoản đã bị khóa");
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                        dispatcher.forward(request, response);
+                    }
+                }
+                else {
+                    logger.info("Failed login");
+                    request.setAttribute("error", "Thông tin đăng nhập không hợp lệ");
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                    dispatcher.forward(request, response);
+                }
+            }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -196,42 +206,51 @@ public class loginController extends HttpServlet {
         user = context.getInitParameter("user");
         pass = context.getInitParameter("pass");
 
+        String csrfToken = request.getParameter("csrfToken");
+        HttpSession session = request.getSession();
+        String sessionToken = (String) session.getAttribute("csrfToken");
 
         // Chỉnh sửa
         String secretKey = generateSecretKey();
-        HttpSession session = request.getSession();
         session.setAttribute("secretKey", secretKey);
 
-        maOtp = generateTotp(secretKey);
-        // Chỉnh sửa
+        if (csrfToken == null || !csrfToken.equals(sessionToken)) {
+            request.setAttribute("error", "Token không hợp lệ!");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+            dispatcher.forward(request, response);
+        } else {
+            maOtp = generateTotp(secretKey);
+            // Chỉnh sửa
 
-        String username = request.getParameter("username");
-        String email = request.getParameter("email");
-        String subject = "Mã OTP xác nhận của bạn là:";
+            String username = request.getParameter("username");
+            String email = request.getParameter("email");
+            String subject = "Mã OTP xác nhận của bạn là:";
 
-        taikhoan usernameModel = new taikhoan();
-        usernameModel.setUsername(username);
-        thongtincanhan emailModel = new thongtincanhan();
-        emailModel.setEmail(email);
+            taikhoan usernameModel = new taikhoan();
+            usernameModel.setUsername(username);
+            thongtincanhan emailModel = new thongtincanhan();
+            emailModel.setEmail(email);
 
-        try {
-            boolean kt = forgotDao.kiemtratk(usernameModel,emailModel);
-            if(kt){
-                forgotDao.sendEmail(host, port, user, pass, email, subject, maOtp);
-                request.setAttribute("inputUsername", username);
-                request.setAttribute("inputEmail", email);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/login/forgot.jsp");
-                dispatcher.forward(request, response);
+            try {
+                boolean kt = forgotDao.kiemtratk(usernameModel,emailModel);
+                if(kt){
+                    forgotDao.sendEmail(host, port, user, pass, email, subject, maOtp);
+                    request.setAttribute("inputUsername", username);
+                    request.setAttribute("inputEmail", email);
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/login/forgot.jsp");
+                    dispatcher.forward(request, response);
+                }
+                else{
+                    request.setAttribute("error", "Tài khoản hoặc email không đúng!");
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/login/forgot.jsp");
+                    dispatcher.forward(request, response);
+                }
+
+            } catch (ClassNotFoundException | MessagingException e) {
+                throw new RuntimeException(e);
             }
-            else{
-                request.setAttribute("error", "Tài khoản hoặc email không đúng!");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/login/forgot.jsp");
-                dispatcher.forward(request, response);
-            }
-
-        } catch (ClassNotFoundException | MessagingException e) {
-            throw new RuntimeException(e);
         }
+
     }
     private boolean verifyTotp(String secretKey, String otp) throws NoSuchAlgorithmException, InvalidKeyException {
         String generatedTotp = generateTotp(secretKey);
@@ -246,33 +265,40 @@ public class loginController extends HttpServlet {
 
         HttpSession session = request.getSession();
         String secretKey = (String) session.getAttribute("secretKey");
-
-        if (!verifyTotp(secretKey, otp)) {
-            request.setAttribute("error", "Mã OTP không trùng khớp!");
+        String csrfToken = request.getParameter("csrfToken");
+        String sessionToken = (String) session.getAttribute("csrfToken");
+        if (csrfToken == null || !csrfToken.equals(sessionToken)) {
+            request.setAttribute("error", "Token không hợp lệ!");
             RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
             dispatcher.forward(request, response);
-            return;
-        }
-
-        taikhoan usernameModel = new taikhoan();
-        usernameModel.setUsername(username);
-        thongtincanhan emailModel = new thongtincanhan();
-        emailModel.setEmail(email);
-
-        try {
-            boolean ischanged = forgotDao.changePass(usernameModel, emailModel, newpassword);
-            if(ischanged){
+        } else {
+            if (!verifyTotp(secretKey, otp)) {
+                request.setAttribute("error", "Mã OTP không trùng khớp!");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                 dispatcher.forward(request, response);
-            }
-            else{
-                request.setAttribute("error", "Không thể thay đổi mật khẩu!");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/login/forgot.jsp");
-                dispatcher.forward(request, response);
+                return;
             }
 
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            taikhoan usernameModel = new taikhoan();
+            usernameModel.setUsername(username);
+            thongtincanhan emailModel = new thongtincanhan();
+            emailModel.setEmail(email);
+
+            try {
+                boolean ischanged = forgotDao.changePass(usernameModel, emailModel, newpassword);
+                if(ischanged){
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                    dispatcher.forward(request, response);
+                }
+                else{
+                    request.setAttribute("error", "Không thể thay đổi mật khẩu!");
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/login/forgot.jsp");
+                    dispatcher.forward(request, response);
+                }
+
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -283,52 +309,72 @@ public class loginController extends HttpServlet {
         String newpassword = request.getParameter("newpassword");
         String confirmnewpass = request.getParameter("confirmnewpass");
 
-        if (!newpassword.equals(confirmnewpass)) {
-            request.setAttribute("error", "Mật khẩu mới không trùng khớp!");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/login/change.jsp");
+        String csrfToken = request.getParameter("csrfToken");
+        HttpSession session = request.getSession();
+        String sessionToken = (String) session.getAttribute("csrfToken");
+
+        if (csrfToken == null || !csrfToken.equals(sessionToken)) {
+            request.setAttribute("error", "Token không hợp lệ!");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
             dispatcher.forward(request, response);
-            return;
-        }
+        } else {
+            if (!newpassword.equals(confirmnewpass)) {
+                request.setAttribute("error", "Mật khẩu mới không trùng khớp!");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/login/change.jsp");
+                dispatcher.forward(request, response);
+                return;
+            }
 
-        taikhoan loginModel = new taikhoan();
-        loginModel.setUsername(username);
-        loginModel.setPass(oldpassword);
+            taikhoan loginModel = new taikhoan();
+            loginModel.setUsername(username);
+            loginModel.setPass(oldpassword);
 
-        try {
-            taikhoan tk = loginDao.validate(loginModel);
-            if (tk != null) {
-                boolean isChanged = changeDao.changePassword(tk, newpassword);
-                if (isChanged) {
-                    request.setAttribute("message", "Thay đổi mật khẩu thành công!");
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
-                    dispatcher.forward(request, response);
+            try {
+                taikhoan tk = loginDao.validate(loginModel);
+                if (tk != null) {
+                    boolean isChanged = changeDao.changePassword(tk, newpassword);
+                    if (isChanged) {
+                        request.setAttribute("message", "Thay đổi mật khẩu thành công!");
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                        dispatcher.forward(request, response);
+                    } else {
+                        request.setAttribute("error", "Không thể thay đổi mật khẩu!");
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("/login/change.jsp");
+                        dispatcher.forward(request, response);
+                    }
                 } else {
-                    request.setAttribute("error", "Không thể thay đổi mật khẩu!");
+                    request.setAttribute("error", "Tài khoản hoặc Mật khẩu không tồn tại!");
                     RequestDispatcher dispatcher = request.getRequestDispatcher("/login/change.jsp");
                     dispatcher.forward(request, response);
                 }
-            } else {
-                request.setAttribute("error", "Tài khoản hoặc Mật khẩu không tồn tại!");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/login/change.jsp");
-                dispatcher.forward(request, response);
-            }
 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+
     }
     private void FromLogin(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
+        HttpSession session = request.getSession(true);
+        String csrfToken = UUID.randomUUID().toString();
+        session.setAttribute("csrfToken", csrfToken);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
         dispatcher.forward(request, response);
     }
     private void FromForgot(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
+        HttpSession session = request.getSession(true);
+        String csrfToken = UUID.randomUUID().toString();
+        session.setAttribute("csrfToken", csrfToken);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/login/forgot.jsp");
         dispatcher.forward(request, response);
     }
     private void FromChange(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
+        HttpSession session = request.getSession(true);
+        String csrfToken = UUID.randomUUID().toString();
+        session.setAttribute("csrfToken", csrfToken);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/login/change.jsp");
         dispatcher.forward(request, response);
     }

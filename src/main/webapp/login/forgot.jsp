@@ -27,9 +27,7 @@
 	<%
 		response.setHeader("X-Frame-Options", "SAMEORIGIN");
 	%>
-	<%
-		response.setHeader("Content-Security-Policy", "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self'; img-src 'self' https://www.evn.com.vn/userfile/VH/User/huyent_tcdl/images/2021/6/hrmscuatapdoan24621(1).jpeg; frame-src 'none'; frame-ancestors 'none'; media-src 'none'; object-src 'none'; manifest-src 'none'; worker-src 'none'; form-action 'none'");
-	%>
+
 </head>
 <body>
 <%taikhoan username = (taikhoan) session.getAttribute("user"); %>
@@ -53,6 +51,7 @@
 				<div class = "box_icon_login"> <i class="fa-solid fa-envelope fa-2xl"></i></div>
 				<input type="email" name="email" placeholder="Gmail" value="<%= request.getAttribute("inputEmail") != null ? request.getAttribute("inputEmail") : "" %>" required>
             </div>
+				<input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
 				<div class="error_mess" style="color:red;">
 					<%String errorMsg = (String) request.getAttribute("error"); %>
 					<%if (errorMsg != null) { %>
@@ -76,7 +75,7 @@
 				<div class = "box_icon_login"> <i class="fa-solid fa-lock-open fa-2xl"></i></div>
             	<input type="password" name="newpassword" placeholder="Nhập lại mật khẩu mới" required>
             </div>
-
+				<input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
 			<div class = "box_button_login"> <button type="submit" class="btn"><b>Xác nhận</b></button> </div>
 			</form>
     	</div>

@@ -27,7 +27,9 @@
 			padding-left: 3rem;
 		}
 	</style>
-
+	<%
+		response.setHeader("X-Frame-Options", "SAMEORIGIN");
+	%>
 </head>
 <body>
 <%taikhoan username = (taikhoan) session.getAttribute("user"); %>
@@ -49,6 +51,7 @@
 				<div class = "box_icon_login"><i class="fa-solid fa-lock fa-2xl"></i></div>
             	<input type="password" name="password" id="password" placeholder="Mật khẩu" autocomplete=“off” required>
             </div>
+			<input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
 			<div class="error_mess" style="color:red;">
 				<%String errorMsg = (String) request.getAttribute("error"); %>
 				<%if (errorMsg != null) { %>
