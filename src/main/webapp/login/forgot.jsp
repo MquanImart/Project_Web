@@ -56,6 +56,7 @@
 					<p><%=errorMsg %></p>
 					<%} %>
 				</div>
+				<input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
 			<div class = "box_button_login">
 				<button type="submit" class="btn btn_gui"><b>Gửi mã</b></button>
 			</div>
@@ -73,7 +74,7 @@
 				<div class = "box_icon_login"> <i class="fa-solid fa-lock-open fa-2xl"></i></div>
             	<input type="password" name="newpassword" placeholder="Nhập lại mật khẩu mới" required>
             </div>
-
+			<input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
 			<div class = "box_button_login"> <button type="submit" class="btn"><b>Xác nhận</b></button> </div>
 			</form>
     	</div>
