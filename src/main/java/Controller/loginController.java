@@ -18,6 +18,8 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import javax.mail.*;
 
 import DAO.*;
@@ -94,48 +96,55 @@ public class loginController extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        taikhoan loginModel = new taikhoan();
-        loginModel.setUsername(username);
-        loginModel.setPass(password);
-
         try {
             HttpSession session = request.getSession();
-            taikhoan tk = loginDao.validate(loginModel);
-            session.setAttribute("user", tk);
+            taikhoan tk = loginDao.findByUsername(username); // Đổi phương thức validate thành findByUsername hoặc tương tự
             if (tk != null) {
-                boolean tinhtrang = loginDAO.layTinhTrang(tk.getMatk());
-                if (tinhtrang==true) {
-                    int capbac = chucvuDAO.CapBacQuyenHan(tk.getMatk()); // 0 nhanvien 1 truong phong 2 giam doc 3 admin
+                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                if(encoder.matches(password, tk.getPass())){
+                    // Mật khẩu khớp, tiến hành đăng nhập
+                    session.setAttribute("user", tk);
+                    // Các thao tác tiếp theo sau khi đăng nhập thành công
 
-                    session.setAttribute("capbac",capbac);
+                    // Nếu tài khoản không bị khóa
+                    if (loginDAO.layTinhTrang(tk.getMatk())) {
+                        int capbac = chucvuDAO.CapBacQuyenHan(tk.getMatk());
+                        session.setAttribute("capbac", capbac);
 
-                    nhanvien thongtinnv = qlnhanvienDAO.LayThongTinNhanVien(tk.getMatk());
-                    session.setAttribute("thongtinnv", thongtinnv);
+                        // Lấy thông tin nhân viên
+                        nhanvien thongtinnv = qlnhanvienDAO.LayThongTinNhanVien(tk.getMatk());
+                        session.setAttribute("thongtinnv", thongtinnv);
 
-                    String tenchucvu = chucvuDAO.TenCapBac(tk.getMatk());
-                    session.setAttribute("tencapbac_header", tenchucvu);
+                        // Lấy tên chức vụ
+                        String tenchucvu = chucvuDAO.TenCapBac(tk.getMatk());
+                        session.setAttribute("tencapbac_header", tenchucvu);
 
-                    phongban ttphongban = phongbanDAO.selectPhongBan(thongtinnv.getMapb());
-                    session.setAttribute("phongban_header", ttphongban);
+                        // Lấy thông tin phòng ban
+                        phongban ttphongban = phongbanDAO.selectPhongBan(thongtinnv.getMapb());
+                        session.setAttribute("phongban_header", ttphongban);
 
-                    chinhanh inf_chinhanh = chinhanhDAO.selectChiNhanh(thongtinnv.getMacn());
-                    session.setAttribute("chinhanh_header", inf_chinhanh);
+                        // Lấy thông tin chi nhánh
+                        chinhanh inf_chinhanh = chinhanhDAO.selectChiNhanh(thongtinnv.getMacn());
+                        session.setAttribute("chinhanh_header", inf_chinhanh);
 
-                    thongtincanhan tennv = thongtincanhanDAO.layThongTinCaNhan(tk.getMatk());
-                    session.setAttribute("tennhanvien_menu", tennv);
+                        // Lấy thông tin cá nhân
+                        thongtincanhan tennv = thongtincanhanDAO.layThongTinCaNhan(tk.getMatk());
+                        session.setAttribute("tennhanvien_menu", tennv);
 
-                    logger.info("Success login: " + username);
+                        logger.info("Success login: " + username);
 
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/trangchu");
-                    dispatcher.forward(request, response);
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("/trangchu");
+                        dispatcher.forward(request, response);
+                    }
                 } else {
+                    // Nếu tài khoản bị khóa
                     logger.info("Failed login: " + username);
                     request.setAttribute("error", "Tài khoản đã bị khóa");
                     RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                     dispatcher.forward(request, response);
                 }
-            }
-            else {
+            } else {
+                // Mật khẩu không khớp hoặc tài khoản không tồn tại
                 logger.info("Failed login");
                 request.setAttribute("error", "Thông tin đăng nhập không hợp lệ");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
@@ -146,6 +155,7 @@ public class loginController extends HttpServlet {
             e.printStackTrace();
         }
     }
+
 
     // Chỉnh sửa
     private String generateSecretKey() {
