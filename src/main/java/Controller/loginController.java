@@ -47,6 +47,7 @@ public class loginController extends HttpServlet {
                 ChangePass(request, response);
                 break;
         }
+        response.setHeader("X-Content-Type-Options", "nosniff");
         doGet(request,response);
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -83,6 +84,7 @@ public class loginController extends HttpServlet {
             HttpSession session = request.getSession();
             taikhoan tk = loginDao.validate(loginModel);
             session.setAttribute("user", tk);
+
             if (tk != null) {
                 boolean tinhtrang = loginDAO.layTinhTrang(tk.getMatk());
                 if (tinhtrang == true) {

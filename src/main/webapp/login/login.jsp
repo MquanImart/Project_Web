@@ -2,7 +2,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
-
 <head>
     <title>Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
@@ -14,7 +13,10 @@
         crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/login.css" />
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css" />
-    <style>
+	<%
+		response.setHeader("Content-Security-Policy", "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self'; img-src 'self' https://www.evn.com.vn/userfile/VH/User/huyent_tcdl/images/2021/6/hrmscuatapdoan24621(1).jpeg; frame-src 'none'; frame-ancestors 'none'; media-src 'none'; object-src 'none'; manifest-src 'none'; worker-src 'none'; form-action 'self'");
+	%>
+	<style>
 		input { text-transform: none; }
 		.error_mess{
 			width: 100%; height: 3rem;
@@ -67,7 +69,6 @@
     	</div>
 	</div>
 	<script>
-
 		function showpass() {
 			var x = document.getElementById("password");
 			if (x.type === "password") {

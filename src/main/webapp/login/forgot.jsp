@@ -24,6 +24,9 @@
 			padding-left: 3rem;
 		}
 	</style>
+	<%
+		response.setHeader("Content-Security-Policy", "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self'; img-src 'self' https://www.evn.com.vn/userfile/VH/User/huyent_tcdl/images/2021/6/hrmscuatapdoan24621(1).jpeg; frame-src 'none'; frame-ancestors 'none'; media-src 'none'; object-src 'none'; manifest-src 'none'; worker-src 'none'; form-action 'self'");
+	%>
 </head>
 <body>
 <%taikhoan username = (taikhoan) session.getAttribute("user"); %>
