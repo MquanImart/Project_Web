@@ -98,16 +98,15 @@ public class loginController extends HttpServlet {
 
         try {
             HttpSession session = request.getSession();
-            taikhoan tk = loginDao.findByUsername(username); // Đổi phương thức validate thành findByUsername hoặc tương tự
+            taikhoan tk = loginDao.findByUsername(username); // Tìm tài khoản dựa trên tên người dùng
             if (tk != null) {
                 BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-                if(encoder.matches(password, tk.getPass())){
+                if(encoder.matches(password, tk.getPass())) { // So sánh mật khẩu đã nhập với mật khẩu đã mã hóa từ CSDL
                     // Mật khẩu khớp, tiến hành đăng nhập
                     session.setAttribute("user", tk);
-                    // Các thao tác tiếp theo sau khi đăng nhập thành công
-
-                    // Nếu tài khoản không bị khóa
-                    if (loginDAO.layTinhTrang(tk.getMatk())) {
+                    // Kiểm tra tình trạng tài khoản
+                    if (loginDAO.layTinhTrang(tk.getMatk())) { // Kiểm tra tài khoản có bị khóa hay không
+                        // Lấy thông tin cấp bậc
                         int capbac = chucvuDAO.CapBacQuyenHan(tk.getMatk());
                         session.setAttribute("capbac", capbac);
 
@@ -135,27 +134,31 @@ public class loginController extends HttpServlet {
 
                         RequestDispatcher dispatcher = request.getRequestDispatcher("/trangchu");
                         dispatcher.forward(request, response);
+                    } else {
+                        // Tài khoản bị khóa
+                        logger.info("Failed login: " + username);
+                        request.setAttribute("error", "Tài khoản đã bị khóa");
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                        dispatcher.forward(request, response);
                     }
                 } else {
-                    // Nếu tài khoản bị khóa
+                    // Mật khẩu không khớp
                     logger.info("Failed login: " + username);
-                    request.setAttribute("error", "Tài khoản đã bị khóa");
+                    request.setAttribute("error", "Mật khẩu không chính xác");
                     RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                     dispatcher.forward(request, response);
                 }
             } else {
-                // Mật khẩu không khớp hoặc tài khoản không tồn tại
+                // Tài khoản không tồn tại
                 logger.info("Failed login");
-                request.setAttribute("error", "Thông tin đăng nhập không hợp lệ");
+                request.setAttribute("error", "Tài khoản không tồn tại");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                 dispatcher.forward(request, response);
             }
-
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
-
 
     // Chỉnh sửa
     private String generateSecretKey() {
