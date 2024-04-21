@@ -95,26 +95,22 @@ public class loginController extends HttpServlet {
     }
     private void authenticate(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        taikhoan loginModel = new taikhoan();
-        loginModel.setUsername(username);
-        loginModel.setPass(password);
 
         try {
             HttpSession session = request.getSession();
-            taikhoan tk = loginDao.findByUsername(username);
-            session.setAttribute("user", tk);
+            String secretKey = (String) session.getAttribute("secretKey");
             String csrfToken = request.getParameter("csrfToken");
             String sessionToken = (String) session.getAttribute("csrfToken");
+
             if (csrfToken == null || !csrfToken.equals(sessionToken)) {
-                logger.info("Failed login");
-                request.setAttribute("error", "Thông tin đăng nhập không hợp lệ");
+                request.setAttribute("error", "Token không hợp lệ!");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                 dispatcher.forward(request, response);
             } else {
+                taikhoan tk = loginDao.findByUsername(username); // Tìm tài khoản dựa trên tên người dùng
                 if (tk != null) {
                     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
                     if(encoder.matches(password, tk.getPass())) { // So sánh mật khẩu đã nhập với mật khẩu đã mã hóa từ CSDL

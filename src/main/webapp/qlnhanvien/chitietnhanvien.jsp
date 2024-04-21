@@ -103,6 +103,11 @@
 									<label for="username"><b>Tên tài khoản:</b></label>
 									<input type="text" class="control" id="username" placeholder="Tên tài khoản" name="username" value="${taikhoan.username}" readonly required>
 								</div>
+								<div class="form-group form-inline">
+									<label for="pass"><b>Mật khẩu:</b></label>
+									<input type="password" class="control_more" id="pass" placeholder="Mật khẩu" name="pass" value="${taikhoan.pass}" readonly required>
+									<button type="button" class="button_icon_small" onclick="showPass();"><i class="fa-solid fa-eye fa-sm"></i></button>
+								</div>
 								<div class="error_mess" id = "error_pass" style="color:red;">
 									<p></p>
 								</div>
