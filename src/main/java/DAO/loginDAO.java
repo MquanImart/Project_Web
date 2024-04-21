@@ -61,4 +61,28 @@ public class loginDAO {
         }
         return false;
     }
+
+    public taikhoan findByUsername(String username) throws ClassNotFoundException {
+        taikhoan result = null;
+
+        Class.forName("com.mysql.jdbc.Driver");
+
+        try (Connection connection = JDBCUtils.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM taikhoan WHERE username = ?")) {
+            preparedStatement.setString(1, username);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                String dbUsername = rs.getString("username");
+                String dbPassword = rs.getString("pass");
+                String matk = rs.getString("matk");
+                result = new taikhoan(dbUsername, dbPassword, matk);
+            }
+
+        } catch (SQLException e) {
+            JDBCUtils.printSQLException(e);
+        }
+        return result;
+    }
+
 }

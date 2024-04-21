@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+//Thu vien ham bam crypto
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import DAO.*;
 import Model.*;
 import com.google.gson.Gson;
@@ -290,7 +293,14 @@ public class qlnhanvienController extends HttpServlet {
             thongtincanhan ttcn = new thongtincanhan(matk, hoten, ngaysinh, gioitinh, madc_dc, sdt, email, bangcap);
             cancuoccongdan cccd = new cancuoccongdan(matk, so_cccd, ngaycap, madc_cc);
             nhanvien nv = new nhanvien(matk, chinhanh, phongban, ngaybatdau, "Đang hoạt động", congviec);
-            taikhoan tk = new taikhoan(username, pass, matk);
+
+
+            // Tạo một đối tượng BCryptPasswordEncoder:
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            // Băm mật khẩu
+            String hashedPassword = encoder.encode(pass);
+
+            taikhoan tk = new taikhoan(username, hashedPassword, matk);
 
             diachiDAO.insertDiaChi(diachi_cc);
             diachiDAO.insertDiaChi(diachi_nv);

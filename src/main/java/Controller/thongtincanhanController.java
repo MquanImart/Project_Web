@@ -34,7 +34,6 @@ public class thongtincanhanController extends HttpServlet {
             switch (action) {
                 case "/thaydoithongtin":
                     capNhatThongTin(request, response);
-                    capNhatMatKhau(request, response);
                     response.sendRedirect("thongtincanhan");
                     break;
                 case "/thaydoicccd":
@@ -116,19 +115,6 @@ public class thongtincanhanController extends HttpServlet {
             diachi dc = new diachi(madc,tinhtp,quanhuyen,phuongxa,sonha);
             thongtincanhanDAO.capNhatDiaChi(dc);
             response.sendRedirect("thongtincanhan");
-        } else {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
-            dispatcher.forward(request, response);
-        }
-    }
-    private void capNhatMatKhau(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException, ServletException {
-        String matk = getMatk(request, response);
-        String user = "";
-        if (matk != null) {
-            String pass = request.getParameter("pass");
-            taikhoan tk = new taikhoan(user,pass,matk);
-            thongtincanhanDAO.capNhatMatKhau(tk);
         } else {
             RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
             dispatcher.forward(request, response);
