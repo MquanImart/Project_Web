@@ -101,14 +101,6 @@
 									<label for="username"><b>Tên tài khoản:</b></label>
 									<input type="text" class="control" id="username" placeholder="Tên tài khoản" name="username" value="${taikhoan.username}" readonly required>
 								</div>
-								<div class="form-group form-inline">
-									<label for="pass"><b>Mật khẩu:</b></label>
-									<input type="password" class="control_more" id="pass" placeholder="Mật khẩu" name="pass" value="${taikhoan.pass}" readonly required>
-									<button type="button" class="button_icon_small" onclick="showPass();"><i class="fa-solid fa-eye fa-sm"></i></button>
-								</div>
-								<div>
-									<button type="button" class="btn_mk" id="btn_doimk"><b>Đổi mật khẩu</b></button>
-								</div>
 							</div>
 						</div>
 				
@@ -215,14 +207,6 @@
         </div>
     </div>
 	<script>
-		function showPass() {
-			var passwordInput = document.getElementById('pass');
-			if (passwordInput.type === 'password') {
-				passwordInput.type = 'text';
-			} else {
-				passwordInput.type = 'password';
-			}
-		}
 		let hoten = document.getElementById("hoten");
 		let ngaysinh = document.getElementById("ngaysinh");
 		let gioitinh = document.getElementById("gioitinh");
@@ -273,13 +257,6 @@
 				sdt.setAttribute("readonly", true);
 				email.setAttribute("readonly", true);
 				isEditing = false;
-			}
-		});
-		btn_doimk.addEventListener("click", function() {
-			if (pass.hasAttribute("readonly")) {
-				pass.removeAttribute("readonly");
-			} else {
-				pass.setAttribute("readonly", true);
 			}
 		});
 		btn_save.addEventListener("click", function() {

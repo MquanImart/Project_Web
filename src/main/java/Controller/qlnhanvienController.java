@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+//Thu vien ham bam crypto
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import DAO.*;
 import Model.*;
 import com.google.gson.Gson;
@@ -134,6 +137,35 @@ public class qlnhanvienController extends HttpServlet {
             dispatcher.forward(request, response);
         }
     }
+    public boolean KiemTraMatKhau(String password){
+        if (password.length() < 8) {
+            return false;
+        }
+        boolean chuaChuHoa = false;
+        boolean chuaChuThuong = false;
+        boolean chuaChuSo = false;
+        boolean chuaKiTuDacBiet = false;
+        String kyTuDacBiet = "!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?";
+
+        for (int i = 0; i < password.length(); i++) {
+            if (Character.isUpperCase(password.charAt(i))) {
+                chuaChuHoa = true;
+            }
+            if (Character.isLowerCase(password.charAt(i))) {
+                chuaChuThuong = true;
+            }
+            if (Character.isDigit(password.charAt(i))) {
+                chuaChuSo = true;
+            }
+            if (kyTuDacBiet.contains(String.valueOf(password.charAt(i)))) {
+                chuaKiTuDacBiet = true;
+            }
+        }
+        if (!chuaChuHoa || !chuaChuThuong || !chuaChuSo || !chuaKiTuDacBiet) {
+            return false;
+        }
+        return true;
+    }
     public void ThemNhanVien(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException{
         String user = getMatk(request,response);
@@ -225,7 +257,8 @@ public class qlnhanvienController extends HttpServlet {
     public void TuyenNhanVien(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException{
         String user = getMatk(request,response);
-        if (user != null) {
+        String pass = request.getParameter("pass");
+        if (user != null && KiemTraMatKhau(pass)) {
             String matk = forgotDAO.getNewMatk();
             String hoten = request.getParameter("hoten");
             LocalDate ngaysinh = LocalDate.parse(request.getParameter("ngaysinh"));
@@ -248,7 +281,7 @@ public class qlnhanvienController extends HttpServlet {
             String sdt = request.getParameter("sdt");
             String email = request.getParameter("email");
             String username = request.getParameter("username");
-            String pass = request.getParameter("pass");
+
             String congviec = request.getParameter("congviec");
             String phongban = request.getParameter("phongban");
             String chinhanh = request.getParameter("chinhanh");
@@ -260,7 +293,14 @@ public class qlnhanvienController extends HttpServlet {
             thongtincanhan ttcn = new thongtincanhan(matk, hoten, ngaysinh, gioitinh, madc_dc, sdt, email, bangcap);
             cancuoccongdan cccd = new cancuoccongdan(matk, so_cccd, ngaycap, madc_cc);
             nhanvien nv = new nhanvien(matk, chinhanh, phongban, ngaybatdau, "Đang hoạt động", congviec);
-            taikhoan tk = new taikhoan(username, pass, matk);
+
+
+            // Tạo một đối tượng BCryptPasswordEncoder:
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            // Băm mật khẩu
+            String hashedPassword = encoder.encode(pass);
+
+            taikhoan tk = new taikhoan(username, hashedPassword, matk);
 
             diachiDAO.insertDiaChi(diachi_cc);
             diachiDAO.insertDiaChi(diachi_nv);
@@ -270,6 +310,11 @@ public class qlnhanvienController extends HttpServlet {
             thongtincanhanDAO.ThemCCCD(cccd);
             chucvuDAO.ThemChucVu(new chucvu(matk, "Nhân Viên"));
             response.sendRedirect("quanlynhanvien");
+        }
+        else {
+            request.setAttribute("error_add", "Không thể thêm nhân viên.");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/qlnhanvien/chitietnhanvien.jsp");
+            dispatcher.forward(request, response);
         }
     }
     public void ThemYeuCau(HttpServletRequest request, HttpServletResponse response)
