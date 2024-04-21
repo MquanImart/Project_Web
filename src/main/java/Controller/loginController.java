@@ -91,74 +91,6 @@ public class loginController extends HttpServlet {
         }catch (SQLException | NoSuchAlgorithmException | InvalidKeyException ex)
         {throw new ServletException(ex);}
     }
-    private void authenticate(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-
-        try {
-            HttpSession session = request.getSession();
-            taikhoan tk = loginDao.findByUsername(username); // Tìm tài khoản dựa trên tên người dùng
-            if (tk != null) {
-                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-                if(encoder.matches(password, tk.getPass())) { // So sánh mật khẩu đã nhập với mật khẩu đã mã hóa từ CSDL
-                    // Mật khẩu khớp, tiến hành đăng nhập
-                    session.setAttribute("user", tk);
-                    // Kiểm tra tình trạng tài khoản
-                    if (loginDAO.layTinhTrang(tk.getMatk())) { // Kiểm tra tài khoản có bị khóa hay không
-                        // Lấy thông tin cấp bậc
-                        int capbac = chucvuDAO.CapBacQuyenHan(tk.getMatk());
-                        session.setAttribute("capbac", capbac);
-
-                        // Lấy thông tin nhân viên
-                        nhanvien thongtinnv = qlnhanvienDAO.LayThongTinNhanVien(tk.getMatk());
-                        session.setAttribute("thongtinnv", thongtinnv);
-
-                        // Lấy tên chức vụ
-                        String tenchucvu = chucvuDAO.TenCapBac(tk.getMatk());
-                        session.setAttribute("tencapbac_header", tenchucvu);
-
-                        // Lấy thông tin phòng ban
-                        phongban ttphongban = phongbanDAO.selectPhongBan(thongtinnv.getMapb());
-                        session.setAttribute("phongban_header", ttphongban);
-
-                        // Lấy thông tin chi nhánh
-                        chinhanh inf_chinhanh = chinhanhDAO.selectChiNhanh(thongtinnv.getMacn());
-                        session.setAttribute("chinhanh_header", inf_chinhanh);
-
-                        // Lấy thông tin cá nhân
-                        thongtincanhan tennv = thongtincanhanDAO.layThongTinCaNhan(tk.getMatk());
-                        session.setAttribute("tennhanvien_menu", tennv);
-
-                        logger.info("Success login: " + username);
-
-                        RequestDispatcher dispatcher = request.getRequestDispatcher("/trangchu");
-                        dispatcher.forward(request, response);
-                    } else {
-                        // Tài khoản bị khóa
-                        logger.info("Failed login: " + username);
-                        request.setAttribute("error", "Tài khoản đã bị khóa");
-                        RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
-                        dispatcher.forward(request, response);
-                    }
-                } else {
-                    // Mật khẩu không khớp
-                    logger.info("Failed login: " + username);
-                    request.setAttribute("error", "Mật khẩu không chính xác");
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
-                    dispatcher.forward(request, response);
-                }
-            } else {
-                // Tài khoản không tồn tại
-                logger.info("Failed login");
-                request.setAttribute("error", "Tài khoản không tồn tại");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
-                dispatcher.forward(request, response);
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
     // Chỉnh sửa
     private String generateSecretKey() {
@@ -208,7 +140,6 @@ public class loginController extends HttpServlet {
         port = context.getInitParameter("port");
         user = context.getInitParameter("user");
         pass = context.getInitParameter("pass");
-
 
         // Chỉnh sửa
         String secretKey = generateSecretKey();
@@ -288,7 +219,74 @@ public class loginController extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
+    private void authenticate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
 
+        try {
+            HttpSession session = request.getSession();
+            taikhoan tk = loginDao.findByUsername(username); // Tìm tài khoản dựa trên tên người dùng
+            if (tk != null) {
+                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                if(encoder.matches(password, tk.getPass())) { // So sánh mật khẩu đã nhập với mật khẩu đã mã hóa từ CSDL
+                    // Mật khẩu khớp, tiến hành đăng nhập
+                    session.setAttribute("user", tk);
+                    // Kiểm tra tình trạng tài khoản
+                    if (loginDAO.layTinhTrang(tk.getMatk())) { // Kiểm tra tài khoản có bị khóa hay không
+                        // Lấy thông tin cấp bậc
+                        int capbac = chucvuDAO.CapBacQuyenHan(tk.getMatk());
+                        session.setAttribute("capbac", capbac);
+
+                        // Lấy thông tin nhân viên
+                        nhanvien thongtinnv = qlnhanvienDAO.LayThongTinNhanVien(tk.getMatk());
+                        session.setAttribute("thongtinnv", thongtinnv);
+
+                        // Lấy tên chức vụ
+                        String tenchucvu = chucvuDAO.TenCapBac(tk.getMatk());
+                        session.setAttribute("tencapbac_header", tenchucvu);
+
+                        // Lấy thông tin phòng ban
+                        phongban ttphongban = phongbanDAO.selectPhongBan(thongtinnv.getMapb());
+                        session.setAttribute("phongban_header", ttphongban);
+
+                        // Lấy thông tin chi nhánh
+                        chinhanh inf_chinhanh = chinhanhDAO.selectChiNhanh(thongtinnv.getMacn());
+                        session.setAttribute("chinhanh_header", inf_chinhanh);
+
+                        // Lấy thông tin cá nhân
+                        thongtincanhan tennv = thongtincanhanDAO.layThongTinCaNhan(tk.getMatk());
+                        session.setAttribute("tennhanvien_menu", tennv);
+
+                        logger.info("Success login: " + username);
+
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("/trangchu");
+                        dispatcher.forward(request, response);
+                    } else {
+                        // Tài khoản bị khóa
+                        logger.info("Failed login: " + username);
+                        request.setAttribute("error", "Tài khoản đã bị khóa");
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                        dispatcher.forward(request, response);
+                    }
+                } else {
+                    // Mật khẩu không khớp
+                    logger.info("Failed login: " + username);
+                    request.setAttribute("error", "Mật khẩu không chính xác");
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                    dispatcher.forward(request, response);
+                }
+            } else {
+                // Tài khoản không tồn tại
+                logger.info("Failed login");
+                request.setAttribute("error", "Tài khoản không tồn tại");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                dispatcher.forward(request, response);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
     private void ChangePass(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException{
         String username = request.getParameter("username");
@@ -303,25 +301,31 @@ public class loginController extends HttpServlet {
             return;
         }
 
-        taikhoan loginModel = new taikhoan();
-        loginModel.setUsername(username);
-        loginModel.setPass(oldpassword);
-
         try {
-            taikhoan tk = loginDao.validate(loginModel);
+            taikhoan tk = loginDao.findByUsername(username);
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             if (tk != null) {
-                boolean isChanged = changeDao.changePassword(tk, newpassword);
-                if (isChanged) {
-                    request.setAttribute("message", "Thay đổi mật khẩu thành công!");
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
-                    dispatcher.forward(request, response);
+                if(encoder.matches(oldpassword, tk.getPass())) { // So sánh mật khẩu đã nhập với mật khẩu đã mã hóa từ CSDL
+                    String hashedPassword = encoder.encode(newpassword);
+                    boolean isChanged = changeDao.changePassword(tk, hashedPassword);
+                    if (isChanged) {
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                        dispatcher.forward(request, response);
+                        request.setAttribute("message", "Thay đổi mật khẩu thành công!");
+                    } else {
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("/login/change.jsp");
+                        dispatcher.forward(request, response);
+                        request.setAttribute("error", "Không thể thay đổi mật khẩu!");
+                    }
                 } else {
-                    request.setAttribute("error", "Không thể thay đổi mật khẩu!");
+                    // Mật khẩu không khớp
                     RequestDispatcher dispatcher = request.getRequestDispatcher("/login/change.jsp");
                     dispatcher.forward(request, response);
+                    request.setAttribute("error", "Mật khẩu không chính xác");
                 }
+
             } else {
-                request.setAttribute("error", "Tài khoản hoặc Mật khẩu không tồn tại!");
+                request.setAttribute("error", "Tài khoản không tồn tại!");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/login/change.jsp");
                 dispatcher.forward(request, response);
             }
