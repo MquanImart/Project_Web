@@ -41,7 +41,7 @@ public class loginController extends HttpServlet {
     }
 
     // Chỉnh sửa
-    private static final int TIME_STEP_SECONDS = 60;
+    private static final int TIME_STEP_SECONDS = 120;
     private static final int TOTP_LENGTH = 6;
     // Chỉnh sửa
 
@@ -204,7 +204,9 @@ public class loginController extends HttpServlet {
         emailModel.setEmail(email);
 
         try {
-            boolean ischanged = forgotDao.changePass(usernameModel, emailModel, newpassword);
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String hashedPassword = encoder.encode(newpassword);
+            boolean ischanged = forgotDao.changePass(usernameModel, emailModel, hashedPassword);
             if(ischanged){
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                 dispatcher.forward(request, response);
@@ -258,27 +260,22 @@ public class loginController extends HttpServlet {
                         thongtincanhan tennv = thongtincanhanDAO.layThongTinCaNhan(tk.getMatk());
                         session.setAttribute("tennhanvien_menu", tennv);
 
-                        logger.info("Success login: " + username);
-
                         RequestDispatcher dispatcher = request.getRequestDispatcher("/trangchu");
                         dispatcher.forward(request, response);
                     } else {
                         // Tài khoản bị khóa
-                        logger.info("Failed login: " + username);
                         request.setAttribute("error", "Tài khoản đã bị khóa");
                         RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                         dispatcher.forward(request, response);
                     }
                 } else {
                     // Mật khẩu không khớp
-                    logger.info("Failed login: " + username);
                     request.setAttribute("error", "Mật khẩu không chính xác");
                     RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                     dispatcher.forward(request, response);
                 }
             } else {
                 // Tài khoản không tồn tại
-                logger.info("Failed login");
                 request.setAttribute("error", "Tài khoản không tồn tại");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                 dispatcher.forward(request, response);
@@ -309,13 +306,13 @@ public class loginController extends HttpServlet {
                     String hashedPassword = encoder.encode(newpassword);
                     boolean isChanged = changeDao.changePassword(tk, hashedPassword);
                     if (isChanged) {
+                        request.setAttribute("message", "Thay đổi mật khẩu thành công");
                         RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                         dispatcher.forward(request, response);
-                        request.setAttribute("message", "Thay đổi mật khẩu thành công!");
                     } else {
+                        request.setAttribute("error", "Không thể thay đổi mật khẩu!");
                         RequestDispatcher dispatcher = request.getRequestDispatcher("/login/change.jsp");
                         dispatcher.forward(request, response);
-                        request.setAttribute("error", "Không thể thay đổi mật khẩu!");
                     }
                 } else {
                     // Mật khẩu không khớp
