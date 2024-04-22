@@ -20,8 +20,6 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/congtac.css" />
     <style>
@@ -29,6 +27,7 @@
             display: flex; flex-direction: column; justify-content: center;
         }
     </style>
+    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/css/favicon.ico">
 </head>
 
 <body>

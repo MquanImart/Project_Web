@@ -25,6 +25,7 @@
             height: 740px;
         }
     </style>
+    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/css/favicon.ico">
 </head>
 
 <body>

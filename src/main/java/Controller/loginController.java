@@ -19,6 +19,7 @@ import java.util.UUID;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.mail.*;
@@ -59,9 +60,7 @@ public class loginController extends HttpServlet {
             case "/forgot_post":
                 try {
                     NewPass(request, response);
-                } catch (NoSuchAlgorithmException e) {
-                    throw new RuntimeException(e);
-                } catch (InvalidKeyException e) {
+                } catch (NoSuchAlgorithmException | InvalidKeyException e) {
                     throw new RuntimeException(e);
                 }
                 break;
@@ -103,9 +102,10 @@ public class loginController extends HttpServlet {
             HttpSession session = request.getSession();
             String secretKey = (String) session.getAttribute("secretKey");
             String csrfToken = request.getParameter("csrfToken");
+            String escapedXmlcsrf = StringEscapeUtils.escapeXml10(csrfToken);
             String sessionToken = (String) session.getAttribute("csrfToken");
 
-            if (csrfToken == null || !csrfToken.equals(sessionToken)) {
+            if (escapedXmlcsrf == null || !escapedXmlcsrf.equals(sessionToken)) {
                 request.setAttribute("error", "Token không hợp lệ!");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
                 dispatcher.forward(request, response);

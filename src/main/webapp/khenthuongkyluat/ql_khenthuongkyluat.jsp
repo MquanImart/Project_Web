@@ -20,6 +20,7 @@
 			display: flex; flex-direction: column; justify-content: center;
 		}
 	</style>
+	<link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/css/favicon.ico">
 </head>
 
 <body>

@@ -16,6 +16,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/quanlynhanvien.css" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/form.css" />
+    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/css/favicon.ico">
 </head>
 
 <body>

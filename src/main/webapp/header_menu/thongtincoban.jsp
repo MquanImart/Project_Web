@@ -8,6 +8,7 @@
     <!-- Linking Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/thongtincoban.css" />
+    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/css/favicon.ico">
     <style>
         .body-infor {
             height: 100px;

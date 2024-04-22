@@ -14,9 +14,8 @@
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/thongtincanhan.css" />
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css" />
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/form.css" />
-	<style>
 
-	</style>
+	<link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/css/favicon.ico">
 </head>
 
 <body>

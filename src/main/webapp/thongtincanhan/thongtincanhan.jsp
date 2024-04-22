@@ -15,6 +15,7 @@
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/thongtincanhan.css" />
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css" />
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/thongtincanhanform.css" />
+	<link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/css/favicon.ico">
 </head>
 <body>
 <%taikhoan username = (taikhoan) session.getAttribute("user"); %>

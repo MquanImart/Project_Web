@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/header.css" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css" />
+    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/css/favicon.ico">
 </head>
 <body>
 <%taikhoan username = (taikhoan) session.getAttribute("user"); %>
