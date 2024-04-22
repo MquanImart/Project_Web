@@ -93,50 +93,75 @@ public class khenthuongkyluatController extends HttpServlet {
     private void Themkhenthuongkyluat(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         String matk = getMatk(request, response);
-        if (matk != null) {
-            String matknhan = request.getParameter("matk");
-            String soqd = request.getParameter("soqd");
-            LocalDate ngay = LocalDate.parse(request.getParameter("ngay"));
-            String loai = request.getParameter("loai");
-            String noidung = request.getParameter("noidung");
-            thanhtichkyluat KTKL = new thanhtichkyluat(getNewId(), soqd, matknhan, ngay, loai, noidung, matk);
-            khenthuongkyluatDAO.ThemKTKL(KTKL);
-            response.sendRedirect("xemthanhtichkyluat");
+        String csrfToken = request.getParameter("csrfToken");
+        HttpSession session = request.getSession();
+        String sessionToken = (String) session.getAttribute("csrfToken");
+
+        if (csrfToken == null || !csrfToken.equals(sessionToken)) {
+            response.sendRedirect("congtac");
         } else {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
-            dispatcher.forward(request, response);
+            if (matk != null) {
+                String matknhan = request.getParameter("matk");
+                String soqd = request.getParameter("soqd");
+                LocalDate ngay = LocalDate.parse(request.getParameter("ngay"));
+                String loai = request.getParameter("loai");
+                String noidung = request.getParameter("noidung");
+                thanhtichkyluat KTKL = new thanhtichkyluat(getNewId(), soqd, matknhan, ngay, loai, noidung, matk);
+                khenthuongkyluatDAO.ThemKTKL(KTKL);
+                response.sendRedirect("xemthanhtichkyluat");
+            } else {
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                dispatcher.forward(request, response);
+            }
         }
     }
     private void Thaydoikhenthuongkyluat(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         String matk = getMatk(request, response);
-        if (matk != null) {
-            String id = request.getParameter("id");
-            String soqd = request.getParameter("soqd");
-            LocalDate ngay = LocalDate.parse(request.getParameter("ngay"));
-            String loai = request.getParameter("loai");
-            String noidung = request.getParameter("noidung");
-            String ngki = request.getParameter("ngki");
-            thanhtichkyluat KTKL = new thanhtichkyluat(id, soqd, matk, ngay, loai, noidung, ngki);
-            khenthuongkyluatDAO.ThayDoiKTKL(KTKL);
-            response.sendRedirect("xemthanhtichkyluat");
+        String csrfToken = request.getParameter("csrfToken");
+        HttpSession session = request.getSession();
+        String sessionToken = (String) session.getAttribute("csrfToken");
+
+        if (csrfToken == null || !csrfToken.equals(sessionToken)) {
+            response.sendRedirect("congtac");
         } else {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
-            dispatcher.forward(request, response);
+            if (matk != null) {
+                String id = request.getParameter("id");
+                String soqd = request.getParameter("soqd");
+                LocalDate ngay = LocalDate.parse(request.getParameter("ngay"));
+                String loai = request.getParameter("loai");
+                String noidung = request.getParameter("noidung");
+                String ngki = request.getParameter("ngki");
+                thanhtichkyluat KTKL = new thanhtichkyluat(id, soqd, matk, ngay, loai, noidung, ngki);
+                khenthuongkyluatDAO.ThayDoiKTKL(KTKL);
+                response.sendRedirect("xemthanhtichkyluat");
+            } else {
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                dispatcher.forward(request, response);
+            }
         }
     }
     private void XoaKTKL(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         String matk = getMatk(request, response);
-        if (matk != null) {
-            String id = request.getParameter("id");
-            thanhtichkyluat KTKL = new thanhtichkyluat(id, null,null,null,null,null,null);
-            khenthuongkyluatDAO.XoaKTKL(KTKL);
-            response.sendRedirect("xemthanhtichkyluat");
+        String csrfToken = request.getParameter("csrfToken");
+        HttpSession session = request.getSession();
+        String sessionToken = (String) session.getAttribute("csrfToken");
+
+        if (csrfToken == null || !csrfToken.equals(sessionToken)) {
+            response.sendRedirect("congtac");
         } else {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
-            dispatcher.forward(request, response);
+            if (matk != null) {
+                String id = request.getParameter("id");
+                thanhtichkyluat KTKL = new thanhtichkyluat(id, null,null,null,null,null,null);
+                khenthuongkyluatDAO.XoaKTKL(KTKL);
+                response.sendRedirect("xemthanhtichkyluat");
+            } else {
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                dispatcher.forward(request, response);
+            }
         }
+
     }
     private void XemKTKL(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {

@@ -225,6 +225,7 @@
 							</div>
 						</div>
 					</div>
+					<input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
                 </form>
 				<%String errorMsg = (String) request.getAttribute("error_add"); %>
 				<%if (errorMsg != null) { %>

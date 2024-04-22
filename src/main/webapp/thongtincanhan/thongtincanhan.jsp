@@ -137,6 +137,7 @@
 							</div>
 						</div>
                     </div>
+					<input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
 					<div>
 						<button class="button_luu" formaction="<%=request.getContextPath()%>/thaydoithongtin"  id="btn_save">
 							<i class="fa-solid fa-floppy-disk fa-2xl"></i>
@@ -170,6 +171,7 @@
 							<label for="cc_sonha" class = "label_form_control">Số nhà:</label>
 							<input type="text" class="form-control box_form_control"id="cc_sonha" placeholder="Số nhà" name="cc_sonha" value="${diachi_cc.sonha}" readonly required>
 						</div>
+						<input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
 						<div class="form_button">
 							<button type="button" id="btn_suacc">Sửa</button>
 							<button type="submit" id="btn_luucc">Xác nhận</button>
@@ -196,6 +198,7 @@
 							<label for="dc_sonha" class = "label_form_control">Số nhà:</label>
 							<input type="text" class="form-control box_form_control"id="dc_sonha" placeholder="Số nhà" name="dc_sonha" value="${diachi.sonha}" readonly required>
 						</div>
+						<input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
 						<div class="form_button">
 							<button type="button" id="btn_suadc">Sửa</button>
 							<button type="submit" id="btn_luudc">Xác nhận</button>

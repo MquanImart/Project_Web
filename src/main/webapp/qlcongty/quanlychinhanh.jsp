@@ -36,7 +36,7 @@
 				</div>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item">
-						<a href="<%=request.getContextPath()%>/addChiNhanh">
+						<a href="<%=request.getContextPath()%>/addChiNhanh?csrfToken=<%= session.getAttribute("csrfToken") %>">
 							<button class="button_icon">
 								<i class="fa-sharp fa-solid fa-plus fa-2x"></i>
 							</button>
@@ -48,7 +48,7 @@
 			<div class="row">
 				<div class="container body">
 					<div class="container text-left">
-						<form class="form-inline">
+						<div class="form-inline">
 							<div class="form-group mx-2">
 								<label for="maCNSelect" class="mr-2"> Mã Chi Nhánh:</label>
 								<select class="form-control form-control-sm box_search" id="maCNSelect"
@@ -71,7 +71,7 @@
 									</c:forEach>
 								</select>
 							</div>
-						</form>
+						</div>
 					</div>
 					<br>
 					<div class="table-container">
@@ -97,8 +97,8 @@
 									<td>${x.magiamdoc}</td>
 									<td>${x.tinhtrang}</td>
 									<td>${x.ngaytao}</td>
-									<td><a href="editChiNhanh?macn=<c:out value='${x.macn}' />&diachi=<c:out value='${x.diachi}' />">Edit</a></td>
-									<td><a href="deleteChiNhanh?macn=<c:out value='${x.macn}' />">Delete</a></td>
+									<td><a href="editChiNhanh?macn=<c:out value='${x.macn}' />&diachi=<c:out value='${x.diachi}' />&csrfToken=<%= session.getAttribute("csrfToken") %>">Edit</a></td>
+									<td><a href="deleteChiNhanh?macn=<c:out value='${x.macn}' />&csrfToken=<%= session.getAttribute("csrfToken") %>">Delete</a></td>
 								</tr>
 							</c:forEach>
 							</tbody>

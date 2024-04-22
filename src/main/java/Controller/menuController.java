@@ -3,10 +3,7 @@ package Controller;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -133,6 +130,8 @@ public class menuController extends HttpServlet {
             taikhoan tk = (taikhoan) session.getAttribute("user");
 
             String matk = getMatk(request,response);
+            String csrfToken = UUID.randomUUID().toString();
+            session.setAttribute("csrfToken", csrfToken);
 
             thongtincanhan tt = thongtincanhanDAO.layThongTinCaNhan(matk);
             request.setAttribute("thongtincanhan", tt);
@@ -184,6 +183,8 @@ public class menuController extends HttpServlet {
             taikhoan username = (taikhoan) session.getAttribute("user");
             List < congtac > listcongtac = congtacDAO.DanhSachCongTac(username.getMatk());
             request.setAttribute("listcongtac", listcongtac);
+            String csrfToken = UUID.randomUUID().toString();
+            session.setAttribute("csrfToken", csrfToken);
             RequestDispatcher dispatcher = request.getRequestDispatcher("/congtac/congtac.jsp");
             dispatcher.forward(request, response);
         } else {
@@ -199,6 +200,8 @@ public class menuController extends HttpServlet {
             taikhoan username = (taikhoan) session.getAttribute("user");
             List <thanhtichkyluat> listKTKL = khenthuongkyluatDAO.DanhSachKTKL(username.getMatk());
             request.setAttribute("listKTKL", listKTKL);
+            String csrfToken = UUID.randomUUID().toString();
+            session.setAttribute("csrfToken", csrfToken);
             RequestDispatcher dispatcher = request.getRequestDispatcher("/khenthuongkyluat/khenthuongkyluat.jsp");
             dispatcher.forward(request, response);
         } else {
@@ -212,8 +215,10 @@ public class menuController extends HttpServlet {
         HttpSession session = request.getSession(false);
         String mainComboValue = request.getParameter("mainComboValue");
         int capbac = (int) session.getAttribute("capbac");
-        if (session != null && user != null && capbac > 0) {
+        if (user != null && capbac > 0) {
             taikhoan username = (taikhoan) session.getAttribute("user");
+            String csrfToken = UUID.randomUUID().toString();
+            session.setAttribute("csrfToken", csrfToken);
             List <nhanvien> listnv = null;
             if (capbac == 1){
                 String mapb = phongbanDAO.LayMaPB(username.getMatk());
@@ -274,8 +279,10 @@ public class menuController extends HttpServlet {
         HttpSession session = request.getSession(false);
         String user = getMatk(request,response);
         int capbac = (int) session.getAttribute("capbac");
-        if (session != null && user != null && capbac > 1) {
+        if (user != null && capbac > 1) {
             nhanvien nv = (nhanvien)session.getAttribute("thongtinnv");
+            String csrfToken = UUID.randomUUID().toString();
+            session.setAttribute("csrfToken", csrfToken);
             String mapb = nv.getMapb();
             String macn = nv.getMacn();
             taikhoan username = (taikhoan) session.getAttribute("user");
@@ -303,8 +310,10 @@ public class menuController extends HttpServlet {
         HttpSession session = request.getSession(false);
         int capbac = (int) session.getAttribute("capbac");
         String user = getMatk(request,response);
-        if (session != null && user != null && capbac > 2) {
+        if (user != null && capbac > 2) {
             List <chinhanh> listchinhanh = chinhanhDAO.selectAllchinhanh();
+            String csrfToken = UUID.randomUUID().toString();
+            session.setAttribute("csrfToken", csrfToken);
             request.setAttribute("listchinhanh", listchinhanh);
             RequestDispatcher dispatcher = request.getRequestDispatcher("/qlcongty/quanlychinhanh.jsp");
             dispatcher.forward(request, response);

@@ -133,6 +133,7 @@
 									<label for="ngki${count}" class = "label_form_control">Người kí:</label>
 									<input type="text" class="form-control box_form_control" id="ngki${count}" name="ngki" value="<c:out value="${item.ngki}" />" readonly>
 								</div>
+								<input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
 							</div>
 							<div class = "col-md-1" style=" background-color: white">
 								<button type="button" class = "text_btn" id = "btn_huy${count}" style="display:none;">Hủy</button>
@@ -229,6 +230,7 @@
                                 	<label for="noidung_add" class = "label_form_control"><b>Nội dung:</b></label>
                                 	<textarea class="form-control box_form_control form_add_noidung" id="noidung_add" name ="noidung" rows = "5" required> </textarea>
                             	</div>
+								<input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
                             	<div class="form_button_add">
                                 	<button type="submit">Xác nhận</button>
                                 	<button type="button" onclick="closeForm()">Hủy</button>

@@ -42,6 +42,7 @@
                                 <button class="button_icon" id = "choose-file" type="button">
                               	    <i class="fa-solid fa-file-excel fa-2x"></i>
                                 </button>
+                                <input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
                                 <input type="file" id="file-input" name="file" style="display: none">
                             </form>
                             <script>
@@ -70,7 +71,7 @@
                 <div class="row">
                     <div class="container body">
                     	<div class="container text-left">
-                            <form class="form-inline">
+                            <div class="form-inline">
                                 <div class="form-group mx-3">
                                     <label for="search" class="mr-2"> Tìm kiếm:</label>
                                     <input class = "form-control box_search" id = "search" onkeyup="Search_textbox()" placeholder="Search">
@@ -96,7 +97,7 @@
                                 <c:set var="capbac" value="${capbac}" />
                                 <c:if test="${capbac > 1}">
                                     <div class="form-group mx-4">
-                                        <a class = "button_add" href="<%=request.getContextPath()%>/themnhanvien" style="text-decoration: none; text-align: center;">Thêm nhân viên</a>
+                                        <a class = "button_add" href="<%=request.getContextPath()%>/themnhanvien?&csrfToken=<%= session.getAttribute("csrfToken") %>" style="text-decoration: none; text-align: center;">Thêm nhân viên</a>
                                     </div>
                                 </c:if>
                                 <c:if test="${capbac == 1}">
@@ -104,7 +105,7 @@
                                         <button type="button" class = "button_add" onclick="openFormRequest()">Yêu cầu thêm nhân viên</button>
                                     </div>
                                 </c:if>
-                            </form>
+                            </div>
                         </div>
                         <br>
                         <table class="table table-bordered">
@@ -135,7 +136,7 @@
                                     <td>${x.tinhtrang}</td>
                                     <td>${x.congviec}</td>
                                     <td><button onclick="openFormXoa${count}()">Sa thải</button></td>
-                                    <td><a href="xemthongtinnhanvien?matk=<c:out value='${x.matk}' />">Xem thêm</a></td>
+                                    <td><a href="xemthongtinnhanvien?matk=<c:out value='${x.matk}'/>&csrfToken=<%= session.getAttribute("csrfToken") %>">Xem thêm</a></td>
                                     <td><button onclick="openFormTinhTrang${count}()">Trạng thái</button></td>
                                     <c:if test="${capbac > 1}">
                                         <td><button onclick="openFormChiDinh${count}()">Chỉ định</button></td>
@@ -148,7 +149,7 @@
                                         <h5>Bấm Xác nhận để xóa.</h5>
                                     </div>
                                     <div class="form_button">
-                                        <a href="<%=request.getContextPath()%>/sathainhanvien?matk=<c:out value='${x.matk}' />" >Xác nhận</a>
+                                        <a href="<%=request.getContextPath()%>/sathainhanvien?matk=<c:out value='${x.matk}'/>&csrfToken=<%= session.getAttribute("csrfToken") %>">Xác nhận</a>
                                         <button type="button" onclick="closeFormXoa${count}()">Hủy</button>
                                     </div>
                                 </div>
@@ -181,6 +182,7 @@
                                             <label for="congviec${count}" class = "label_form_control"><b>Công việc:</b></label>
                                             <input type="text" class="form-control" id="congviec${count}" placeholder="Công việc" name="congviec" required>
                                         </div>
+                                        <input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
                                         <div class="form_button">
                                             <button type="submit">Xác nhận</button>
                                             <button type="button" onclick="closeFormChiDinh${count}()">Hủy</button>
@@ -202,6 +204,7 @@
                                                 <option value="Nghỉ việc">Nghỉ Việc</option>
                                             </select>
                                         </div>
+                                        <input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
                                         <div class="form_button">
                                             <button type="submit">Xác nhận</button>
                                             <button type="button" onclick="closeFormTinhTrang${count}()">Hủy</button>
@@ -245,6 +248,7 @@
                                 <button type="submit">Xác nhận</button>
                                 <button type="button" onclick="closeFormRequest()">Hủy</button>
                             </div>
+                            <input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
                         </form>
                     </div>
 

@@ -88,6 +88,7 @@
         <option>${phongban.mapbtr}</option>
         <option></option>
     </select>
+    <input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
     <br>
 
     <button type="submit">Cập Nhật</button>

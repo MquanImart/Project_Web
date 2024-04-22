@@ -65,59 +65,86 @@ public class thongtincanhanController extends HttpServlet {
     private void capNhatThongTin(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         String matk = getMatk(request, response);
-        if (matk != null) {
-            String hoten = request.getParameter("hoten");
-            LocalDate ngaysinh = LocalDate.parse(request.getParameter("ngaysinh"));
-            String gioitinh = request.getParameter("gioitinh");
-            String sdt = request.getParameter("sdt");
-            String email = request.getParameter("email");
-            thongtincanhan tt = new thongtincanhan(matk, hoten, ngaysinh, gioitinh, sdt, email);
-            thongtincanhanDAO.capNhatThongTinCaNhan(tt);
+        String csrfToken = request.getParameter("csrfToken");
+        HttpSession session = request.getSession();
+        String sessionToken = (String) session.getAttribute("csrfToken");
+
+        if (csrfToken == null || !csrfToken.equals(sessionToken)) {
+            response.sendRedirect("congtac");
         } else {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
-            dispatcher.forward(request, response);
+            if (matk != null) {
+                String hoten = request.getParameter("hoten");
+                LocalDate ngaysinh = LocalDate.parse(request.getParameter("ngaysinh"));
+                String gioitinh = request.getParameter("gioitinh");
+                String sdt = request.getParameter("sdt");
+                String email = request.getParameter("email");
+                thongtincanhan tt = new thongtincanhan(matk, hoten, ngaysinh, gioitinh, sdt, email);
+                thongtincanhanDAO.capNhatThongTinCaNhan(tt);
+            } else {
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                dispatcher.forward(request, response);
+            }
         }
+
     }
     private void capNhatCCCD(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         String matk = getMatk(request, response);
-        if (matk != null) {
-            cancuoccongdan cd = thongtincanhanDAO.layCCCD(matk);
-            String madc = cd.getMadc();
-            String cccd = request.getParameter("cc_cccd");
-            LocalDate ngaycap = LocalDate.parse(request.getParameter("cc_ngaycap"));
-            cancuoccongdan cancuoc = new cancuoccongdan(matk, cccd, ngaycap,madc);
+        String csrfToken = request.getParameter("csrfToken");
+        HttpSession session = request.getSession();
+        String sessionToken = (String) session.getAttribute("csrfToken");
 
-            String tinhtp = request.getParameter("cc_tinhtp");
-            String quanhuyen = request.getParameter("cc_quanhuyen");
-            String phuongxa = request.getParameter("cc_phuongxa");
-            String sonha = request.getParameter("cc_sonha");
-            diachi dc = new diachi(madc,tinhtp,quanhuyen,phuongxa,sonha);
-            thongtincanhanDAO.capNhatDiaChi(dc);
-
-            thongtincanhanDAO.capNhatCCCD(cancuoc);
-            response.sendRedirect("thongtincanhan");
+        if (csrfToken == null || !csrfToken.equals(sessionToken)) {
+            response.sendRedirect("congtac");
         } else {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
-            dispatcher.forward(request, response);
+            if (matk != null) {
+                cancuoccongdan cd = thongtincanhanDAO.layCCCD(matk);
+                String madc = cd.getMadc();
+                String cccd = request.getParameter("cc_cccd");
+                LocalDate ngaycap = LocalDate.parse(request.getParameter("cc_ngaycap"));
+                cancuoccongdan cancuoc = new cancuoccongdan(matk, cccd, ngaycap,madc);
+
+                String tinhtp = request.getParameter("cc_tinhtp");
+                String quanhuyen = request.getParameter("cc_quanhuyen");
+                String phuongxa = request.getParameter("cc_phuongxa");
+                String sonha = request.getParameter("cc_sonha");
+                diachi dc = new diachi(madc,tinhtp,quanhuyen,phuongxa,sonha);
+                thongtincanhanDAO.capNhatDiaChi(dc);
+
+                thongtincanhanDAO.capNhatCCCD(cancuoc);
+                response.sendRedirect("thongtincanhan");
+            } else {
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                dispatcher.forward(request, response);
+            }
         }
+
     }
     private void capNhatDiaChi(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         String matk = getMatk(request, response);
-        if (matk != null) {
-            thongtincanhan tt = thongtincanhanDAO.layThongTinCaNhan(matk);
-            String madc = tt.getDiachi();
-            String tinhtp = request.getParameter("dc_tinhtp");
-            String quanhuyen = request.getParameter("dc_quanhuyen");
-            String phuongxa = request.getParameter("dc_phuongxa");
-            String sonha = request.getParameter("dc_sonha");
-            diachi dc = new diachi(madc,tinhtp,quanhuyen,phuongxa,sonha);
-            thongtincanhanDAO.capNhatDiaChi(dc);
-            response.sendRedirect("thongtincanhan");
+        String csrfToken = request.getParameter("csrfToken");
+        HttpSession session = request.getSession();
+        String sessionToken = (String) session.getAttribute("csrfToken");
+
+        if (csrfToken == null || !csrfToken.equals(sessionToken)) {
+            response.sendRedirect("congtac");
         } else {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
-            dispatcher.forward(request, response);
+            if (matk != null) {
+                thongtincanhan tt = thongtincanhanDAO.layThongTinCaNhan(matk);
+                String madc = tt.getDiachi();
+                String tinhtp = request.getParameter("dc_tinhtp");
+                String quanhuyen = request.getParameter("dc_quanhuyen");
+                String phuongxa = request.getParameter("dc_phuongxa");
+                String sonha = request.getParameter("dc_sonha");
+                diachi dc = new diachi(madc,tinhtp,quanhuyen,phuongxa,sonha);
+                thongtincanhanDAO.capNhatDiaChi(dc);
+                response.sendRedirect("thongtincanhan");
+            } else {
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/login/login.jsp");
+                dispatcher.forward(request, response);
+            }
         }
+
     }
 }

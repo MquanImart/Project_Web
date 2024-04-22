@@ -46,7 +46,7 @@
                     <div class="container body">
 						<c:set var="count" value="0" />
 						<c:forEach var="item" items="${listKTKL}">
-						<form class = "box_form">
+						<div class = "box_form">
 							<div class = "col box_content">
 								<div class="form-group form-inline">
                     				<label for="ngaybatdau${count}" class = "label_form_control">Ngày:</label>
@@ -65,7 +65,7 @@
                     				<textarea class="form-control box_form_control" id="noidung${count}" name="noidung" readonly><c:out value="${item.noidung}" /></textarea>
                 				</div>
 							</div>
-						</form>
+						</div>
 						<c:set var="count" value="${count + 1}" />
 						</c:forEach>
                     </div>

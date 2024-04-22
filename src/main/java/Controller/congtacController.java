@@ -73,50 +73,76 @@ public class congtacController extends HttpServlet {
     private void Themcongtac(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         String matk = getMatk(request, response);
-        if (matk != null ) {
-            LocalDate ngaybatdau = LocalDate.parse(request.getParameter("ngaybatdau"));
-            String tentc = request.getParameter("tentochuc");
-            String diachi = request.getParameter("diachi");
-            String chucvu = request.getParameter("chucvu");
-            String lydo = request.getParameter("lydo");
-            congtac newcongtac = new congtac(matk, ngaybatdau, tentc, diachi, chucvu, lydo);
-            congtacDAO.ThemCongTac(newcongtac);
+
+        String csrfToken = request.getParameter("csrfToken");
+        HttpSession session = request.getSession();
+        String sessionToken = (String) session.getAttribute("csrfToken");
+
+        if (csrfToken == null || !csrfToken.equals(sessionToken)) {
             response.sendRedirect("congtac");
         } else {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/congtac/congtac.jsp");
-            dispatcher.forward(request, response);
+            if (matk != null ) {
+                LocalDate ngaybatdau = LocalDate.parse(request.getParameter("ngaybatdau"));
+                String tentc = request.getParameter("tentochuc");
+                String diachi = request.getParameter("diachi");
+                String chucvu = request.getParameter("chucvu");
+                String lydo = request.getParameter("lydo");
+                congtac newcongtac = new congtac(matk, ngaybatdau, tentc, diachi, chucvu, lydo);
+                congtacDAO.ThemCongTac(newcongtac);
+                response.sendRedirect("congtac");
+            } else {
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/congtac/congtac.jsp");
+                dispatcher.forward(request, response);
+            }
         }
     }
     private void Thaydoicongtac(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         String matk = getMatk(request, response);
-        if (matk != null) {
-            LocalDate ngaybatdau = LocalDate.parse(request.getParameter("ngaybatdau"));
-            String tentc = request.getParameter("tentochuc");
-            String diachi = request.getParameter("diachi");
-            String chucvu = request.getParameter("chucvu");
-            String lydo = request.getParameter("lydo");
-            congtac newcongtac = new congtac(matk, ngaybatdau, tentc, diachi, chucvu, lydo);
-            congtacDAO.ThayDoiCongTac(newcongtac);
+        String csrfToken = request.getParameter("csrfToken");
+        HttpSession session = request.getSession();
+        String sessionToken = (String) session.getAttribute("csrfToken");
+
+        if (csrfToken == null || !csrfToken.equals(sessionToken)) {
             response.sendRedirect("congtac");
         } else {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/congtac/congtac.jsp");
-            dispatcher.forward(request, response);
+            if (matk != null) {
+                LocalDate ngaybatdau = LocalDate.parse(request.getParameter("ngaybatdau"));
+                String tentc = request.getParameter("tentochuc");
+                String diachi = request.getParameter("diachi");
+                String chucvu = request.getParameter("chucvu");
+                String lydo = request.getParameter("lydo");
+                congtac newcongtac = new congtac(matk, ngaybatdau, tentc, diachi, chucvu, lydo);
+                congtacDAO.ThayDoiCongTac(newcongtac);
+                response.sendRedirect("congtac");
+            } else {
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/congtac/congtac.jsp");
+                dispatcher.forward(request, response);
+            }
         }
     }
     private void Xoacongtac(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         String matk = getMatk(request, response);
-        if (matk != null) {
-            LocalDate ngaybatdau = LocalDate.parse(request.getParameter("ngaybatdau"));
-            String tentc = request.getParameter("tentochuc");
 
-            congtac newcongtac = new congtac(matk, ngaybatdau, tentc, null, null, null);
-            congtacDAO.XoaCongTac(newcongtac);
+        String csrfToken = request.getParameter("csrfToken");
+        HttpSession session = request.getSession();
+        String sessionToken = (String) session.getAttribute("csrfToken");
+
+        if (csrfToken == null || !csrfToken.equals(sessionToken)) {
             response.sendRedirect("congtac");
         } else {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/congtac/congtac.jsp");
-            dispatcher.forward(request, response);
+            if (matk != null) {
+                LocalDate ngaybatdau = LocalDate.parse(request.getParameter("ngaybatdau"));
+                String tentc = request.getParameter("tentochuc");
+
+                congtac newcongtac = new congtac(matk, ngaybatdau, tentc, null, null, null);
+                congtacDAO.XoaCongTac(newcongtac);
+                response.sendRedirect("congtac");
+            } else {
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/congtac/congtac.jsp");
+                dispatcher.forward(request, response);
+            }
         }
     }
     private void Xemcongtac(HttpServletRequest request, HttpServletResponse response)

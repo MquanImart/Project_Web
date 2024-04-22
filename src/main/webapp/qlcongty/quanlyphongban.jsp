@@ -36,7 +36,7 @@
 				</div>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item">
-						<a href="<%=request.getContextPath()%>/addPhongBan">
+						<a href="<%=request.getContextPath()%>/addPhongBan?csrfToken=<%= session.getAttribute("csrfToken") %>">
 							<button class="button_icon">
 								<i class="fa-sharp fa-solid fa-plus fa-2x" style="display:${sessionScope.capbac == 0 || sessionScope.capbac == 1 ? 'none' : 'inline'}"></i>
 							</button>
@@ -49,7 +49,7 @@
 			<div class="row">
 				<div class="container body">
 					<div class="container text-left">
-						<form class="form-inline" id="searchForm">
+						<div class="form-inline" id="searchForm">
 							<div class="form-group mx-2">
 								<label for="mapbSelect" class="mr-2"> Mã phòng ban:</label>
 								<select class="form-control form-control-sm box_search" id="mapbSelect"
@@ -72,7 +72,7 @@
 									</c:forEach>
 								</select>
 							</div>
-						</form>
+						</div>
 					</div>
 					<br>
 					<div class="table-container">
@@ -98,8 +98,8 @@
 									<td>${x.matrphong}</td>
 									<td>${x.ngaytao}</td>
 									<td>${x.mapbtr}</td>
-									<td><a href="editPhongBan?mapb=<c:out value='${x.mapb}' />&macn=<c:out value='${x.macn}' />" style="display:${sessionScope.capbac == 0 || sessionScope.capbac == 1 ? 'none' : 'inline'}" >Edit</a></td>
-									<td> <a href="deletePhongBan?mapb=<c:out value='${x.mapb}' />" style="display:${sessionScope.capbac == 0 || sessionScope.capbac == 1 ? 'none' : 'inline'}" >Delete</a></td>	&nbsp;&nbsp;
+									<td><a href="editPhongBan?mapb=<c:out value='${x.mapb}' />&macn=<c:out value='${x.macn}' />&csrfToken=<%= session.getAttribute("csrfToken") %>" style="display:${sessionScope.capbac == 0 || sessionScope.capbac == 1 ? 'none' : 'inline'}" >Edit</a></td>
+									<td> <a href="deletePhongBan?mapb=<c:out value='${x.mapb}' />&csrfToken=<%= session.getAttribute("csrfToken") %>" style="display:${sessionScope.capbac == 0 || sessionScope.capbac == 1 ? 'none' : 'inline'}" >Delete</a></td>	&nbsp;&nbsp;
 								</tr>
 							</c:forEach>
 							</tbody>

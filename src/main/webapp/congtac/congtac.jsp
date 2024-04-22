@@ -7,6 +7,7 @@
 
 <%@ page import="Model.taikhoan" %>
 <%@ page import="Model.congtac" %>
+<%@ page import="java.util.UUID" %>
 <html>
 
 <head>
@@ -81,6 +82,7 @@
                                     <label for="lydo${count}" class = "label_form_control">Lý do:</label>
                                     <input type="text" value="<c:out value="${item_ct.lydo}" />" class="form-control box_form_control" id="lydo${count}" placeholder="Lý do nghỉ" name="lydo" readonly required>
                                 </div>
+                                <input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
                             </div>
                             <div class = "col-md-1" style=" background-color: white">
                                 <button type="button" class = "text_btn" id = "btn_huy${count}" style="display:none;">Hủy</button>
@@ -175,6 +177,7 @@
                             <label for="add_lydo" class = "label_form_control">Lý do:</label>
                             <input type="text" class="form-control box_form_control"id="add_lydo" placeholder="Lý do nghỉ" name="lydo" required>
                         </div>
+                        <input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
                         <div class="form_button">
                             <button type="submit">Xác nhận</button>
                             <button type="button" onclick="closeFormAdd()">Hủy</button>

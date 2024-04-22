@@ -81,7 +81,7 @@
           <div id = "box_content" >
             <c:set var="count" value="0" />
             <c:forEach var="item_ct" items="${listcongtac_nv}">
-              <form class = "box_form">
+              <div class = "box_form">
                 <div class = "col-md-12 box_content">
                   <div class="form-group form-inline">
                     <label for="manv${count}" class = "label_form_control">Mã nhân viên:</label>
@@ -108,7 +108,7 @@
                     <input type="text" class="form-control box_form_control" id="lydo${count}" placeholder="Lý do nghỉ" name="lydo" value="<c:out value="${item_ct.lydo}" />" readonly required>
                   </div>
                 </div>
-              </form>
+              </div>
             </c:forEach>
           </div>
         </div>
