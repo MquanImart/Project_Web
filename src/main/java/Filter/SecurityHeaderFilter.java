@@ -20,13 +20,12 @@ public class SecurityHeaderFilter implements Filter {
         httpResp.setHeader("X-Content-Type-Options", "nosniff");
         httpResp.setHeader("X-Frame-Options", "SAMEORIGIN");
         httpResp.setHeader("Access-Control-Allow-Origin", "https://cdn.jsdelivr.net");
+        httpResp.setHeader("Access-Control-Allow-Origin", "https://cdnjs.cloudflare.com");
         httpResp.setHeader("Access-Control-Allow-Origin", "https://fonts.googleapis.com");
         httpResp.setHeader("Access-Control-Allow-Origin", "https://fonts.gstatic.com");
         httpResp.setHeader("Access-Control-Allow-Origin", "https://stackpath.bootstrapcdn.com");
         httpResp.setHeader("Access-Control-Allow-Origin", "https://use.fontawesome.com");
-        httpResp.setHeader("Access-Control-Allow-Origin" , "https://cdnjs.cloudflare.com");
-        httpResp.setHeader("Access-Control-Allow-Origin", "https://code.jquery.com");
-        httpResp.setHeader("Access-Control-Allow-Origin", "https://localhost:8443");
+        httpResp.setHeader("Access-Control-Allow-Origin", "https://fonts.gstatic.com");
         chain.doFilter(request, response);
     }
 
