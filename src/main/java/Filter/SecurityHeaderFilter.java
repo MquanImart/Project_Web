@@ -19,13 +19,7 @@ public class SecurityHeaderFilter implements Filter {
         httpResp.setHeader("Content-Security-Policy", "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self'; img-src 'self'; frame-src 'none'; frame-ancestors 'none'; media-src 'none'; object-src 'none'; manifest-src 'none'; worker-src 'none'; form-action 'self'");
         httpResp.setHeader("X-Content-Type-Options", "nosniff");
         httpResp.setHeader("X-Frame-Options", "SAMEORIGIN");
-        httpResp.setHeader("Access-Control-Allow-Origin", "https://cdn.jsdelivr.net");
-        httpResp.setHeader("Access-Control-Allow-Origin", "https://cdnjs.cloudflare.com");
-        httpResp.setHeader("Access-Control-Allow-Origin", "https://fonts.googleapis.com");
-        httpResp.setHeader("Access-Control-Allow-Origin", "https://fonts.gstatic.com");
-        httpResp.setHeader("Access-Control-Allow-Origin", "https://stackpath.bootstrapcdn.com");
-        httpResp.setHeader("Access-Control-Allow-Origin", "https://use.fontawesome.com");
-        httpResp.setHeader("Access-Control-Allow-Origin", "https://fonts.gstatic.com");
+        httpResp.setHeader("Access-Control-Allow-Origin", "https://fonts.googleapis.com https://fonts.gstatic.com https://stackpath.bootstrapcdn.com https://use.fontawesome.com https://cdnjs.cloudflare.com https://localhost:8443");
         chain.doFilter(request, response);
     }
 

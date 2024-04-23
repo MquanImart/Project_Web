@@ -57,26 +57,26 @@
 								</div>
 								<div class="form-group form-inline">
 									<label for="hoten"><b>Họ và tên:</b></label>
-									<input type="text" class=" control" id="hoten" placeholder="Họ và tên" name="hoten" value="${thongtincanhan.hoten}" readonly required>
+									<input type="text" class=" control" id="hoten" placeholder="Họ và tên" name="hoten" value="${thongtincanhan.hoten}" readonly required maxlength="50">
 								</div>
 								<div class="form-group form-inline">
 									<label for="ngaysinh"><b>Ngày sinh:</b></label>
-									<input type="date" class=" control" id="ngaysinh" placeholder="Ngày sinh" name="ngaysinh" value="${thongtincanhan.ngaysinh}" readonly required>
+									<input type="date" class=" control" id="ngaysinh" placeholder="Ngày sinh" name="ngaysinh" value="${thongtincanhan.ngaysinh}" readonly required >
 								</div>
 								<div class="form-group form-inline">
 									<label for="gioitinh"><b>Giới tính:</b></label>
-									<input type="text" class=" control" id="gioitinh" placeholder="Giới tính"name="gioitinh" value="${thongtincanhan.gioitinh}" readonly required>
+									<input type="text" class=" control" id="gioitinh" placeholder="Giới tính"name="gioitinh" value="${thongtincanhan.gioitinh}" readonly required maxlength="5">
 								</div>
 								<div class="form-group form-inline">
 									<label for="cccd" ><b>Số CCCD:</b></label>
-									<input type="text" class=" control" id="cccd" placeholder="Số CCCD" name="cccd" value="${cancuoc.cccd}" readonly required>
+									<input type="text" class=" control" id="cccd" placeholder="Số CCCD" name="cccd" value="${cancuoc.cccd}" readonly required maxlength="12">
 									<button type="button" class = "button_show" onclick="openFormCC()">
 										<i class="fa-solid fa-plus fa-sm"></i>
 									</button>
 								</div>
 								<div class="form-group form-inline">
 									<label for="diachi" ><b>Địa chỉ:</b></label>
-									<input type="text" class=" control" id="diachi" placeholder="Địa chỉ" name="diachi" value="${thongtincanhan.diachi}" readonly required>
+									<input type="text" class=" control" id="diachi" placeholder="Địa chỉ" name="diachi" value="${thongtincanhan.diachi}" readonly required maxlength="5">
 									<button type="button" class = "button_show" onclick="openFormDC()">
 										<i class="fa-solid fa-plus fa-sm"></i>
 									</button>
@@ -91,16 +91,16 @@
 							<div class="box_info">
 								<div class="form-group form-inline">
 									<label for="sdt"><b>Số điện thoại:</b></label>
-									<input type="text" class="control" id="sdt" placeholder="Số điện thoại" name="sdt" value="${thongtincanhan.sdt}" readonly required>
+									<input type="text" class="control" id="sdt" placeholder="Số điện thoại" name="sdt" value="${thongtincanhan.sdt}" readonly required maxlength="10">
 								</div>
 								<div class="form-group form-inline">
 									<label for="email"><b>Email:</b></label>
-									<input type="email" class="control" id="email" placeholder="Email" name="email" value="${thongtincanhan.email}" readonly required>
+									<input type="email" class="control" id="email" placeholder="Email" name="email" value="${thongtincanhan.email}" readonly required maxlength="50">
 								</div>
 								<br>
 								<div class="form-group form-inline">
 									<label for="username"><b>Tên tài khoản:</b></label>
-									<input type="text" class="control" id="username" placeholder="Tên tài khoản" name="username" value="${taikhoan.username}" readonly required>
+									<input type="text" class="control" id="username" placeholder="Tên tài khoản" name="username" value="${taikhoan.username}" readonly required maxlength="30">
 								</div>
 							</div>
 						</div>
@@ -113,23 +113,23 @@
 							<div class="box_info">
 								<div class="form-group form-inline">
 									<label for="congviec"><b>Công việc:</b></label>
-									<input type="text" class="control" id="congviec" placeholder="Công việc" name="congviec" value="${congviec}" readonly required>
+									<input type="text" class="control" id="congviec" placeholder="Công việc" name="congviec" value="${congviec}" readonly required maxlength="50">
 								</div>
 								<div class="form-group form-inline">
 									<label for="chucvu"><b>Chức vụ:</b></label>
-									<input type="text" class="control" id="chucvu" placeholder="Chức vụ" name="chucvu" value="${chucvu}" readonly required>
+									<input type="text" class="control" id="chucvu" placeholder="Chức vụ" name="chucvu" value="${chucvu}" readonly required maxlength="50">
 								</div>
 								<div class="form-group form-inline">
 									<label for="phongban"><b>Phòng ban:</b></label>
-									<input type="text" class="control" id="phongban" placeholder="Phòng ban" name="phongban" value="${tenpb}" readonly required>
+									<input type="text" class="control" id="phongban" placeholder="Phòng ban" name="phongban" value="${tenpb}" readonly required maxlength="50">
 								</div>
 								<div class="form-group form-inline">
 									<label for="chinhanh"><b>Chi nhánh:</b></label>
-									<input type="text" class="control" id="chinhanh" placeholder="Chi nhánh" name="chinhanh" value="${tencn}" readonly required>
+									<input type="text" class="control" id="chinhanh" placeholder="Chi nhánh" name="chinhanh" value="${tencn}" readonly required maxlength="50">
 								</div>
 								<div class="form-group form-inline">
 									<label for="capbac"><b>Cấp bậc:</b></label>
-									<input type="text" class="control" id="capbac" placeholder="Cấp bậc" name="bangcap" value="${thongtincanhan.bangcap}"  readonly required>
+									<input type="text" class="control" id="capbac" placeholder="Cấp bậc" name="bangcap" value="${thongtincanhan.bangcap}"  readonly required maxlength="50">
 								</div>
 								<div class="form-group form-inline">
 									<label for="ngaybatdau"><b>Ngày bắt đầu:</b></label>
@@ -150,7 +150,7 @@
 						<h3 class = "form_title">CCCD</h3>
 						<div class="form-group form-inline">
 							<label for="cc_cccd" class = "label_form_control">CCCD:</label>
-							<input type="text" class="form-control box_form_control" id="cc_cccd" placeholder="CCCD" name="cc_cccd" value="${cancuoc.cccd}" readonly required>
+							<input type="text" class="form-control box_form_control" id="cc_cccd" placeholder="CCCD" name="cc_cccd" value="${cancuoc.cccd}" readonly required maxlength="12">
 						</div>
 						<div class="form-group form-inline">
 							<label for="cc_ngaycap" class = "label_form_control">Ngày cấp:</label>
@@ -158,19 +158,19 @@
 						</div>
 						<div class="form-group form-inline">
 							<label for="cc_tinhtp" class = "label_form_control">Tỉnh:</label>
-							<input type="text" class="form-control box_form_control" id="cc_tinhtp" placeholder="Tỉnh" name="cc_tinhtp" value="${diachi_cc.tinhtp}" readonly required>
+							<input type="text" class="form-control box_form_control" id="cc_tinhtp" placeholder="Tỉnh" name="cc_tinhtp" value="${diachi_cc.tinhtp}" readonly required maxlength="50">
 						</div>
 						<div class="form-group form-inline">
 							<label for="cc_quanhuyen" class = "label_form_control">Quận/Huyện:</label>
-							<input type="text" class="form-control box_form_control" id="cc_quanhuyen" placeholder="Quận/Huyện" name="cc_quanhuyen" value="${diachi_cc.quanhuyen}" readonly required>
+							<input type="text" class="form-control box_form_control" id="cc_quanhuyen" placeholder="Quận/Huyện" name="cc_quanhuyen" value="${diachi_cc.quanhuyen}" readonly required maxlength="50">
 						</div>
 						<div class="form-group form-inline">
 							<label for="cc_phuongxa" class = "label_form_control">Phường/Xã:</label>
-							<input type="text" class="form-control box_form_control"id="cc_phuongxa" placeholder="Phường/Xã" name="cc_phuongxa" value="${diachi_cc.phuongxa}" readonly required>
+							<input type="text" class="form-control box_form_control"id="cc_phuongxa" placeholder="Phường/Xã" name="cc_phuongxa" value="${diachi_cc.phuongxa}" readonly required maxlength="50">
 						</div>
 						<div class="form-group form-inline">
 							<label for="cc_sonha" class = "label_form_control">Số nhà:</label>
-							<input type="text" class="form-control box_form_control"id="cc_sonha" placeholder="Số nhà" name="cc_sonha" value="${diachi_cc.sonha}" readonly required>
+							<input type="text" class="form-control box_form_control"id="cc_sonha" placeholder="Số nhà" name="cc_sonha" value="${diachi_cc.sonha}" readonly required maxlength="50">
 						</div>
 						<input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
 						<div class="form_button">
@@ -185,19 +185,19 @@
 						<h3 class = "form_title">Địa chỉ</h3>
 						<div class="form-group form-inline">
 							<label for="dc_tinhtp" class = "label_form_control">Tỉnh:</label>
-							<input type="text" class="form-control box_form_control" id="dc_tinhtp" placeholder="Tỉnh" name="dc_tinhtp" value="${diachi.tinhtp}" readonly required>
+							<input type="text" class="form-control box_form_control" id="dc_tinhtp" placeholder="Tỉnh" name="dc_tinhtp" value="${diachi.tinhtp}" readonly required maxlength="50">
 						</div>
 						<div class="form-group form-inline">
 							<label for="dc_quanhuyen" class = "label_form_control">Quận/Huyện:</label>
-							<input type="text" class="form-control box_form_control" id="dc_quanhuyen" placeholder="Quận/Huyện" name="dc_quanhuyen" value="${diachi.quanhuyen}" readonly required>
+							<input type="text" class="form-control box_form_control" id="dc_quanhuyen" placeholder="Quận/Huyện" name="dc_quanhuyen" value="${diachi.quanhuyen}" readonly required maxlength="50">
 						</div>
 						<div class="form-group form-inline">
 							<label for="dc_phuongxa" class = "label_form_control">Phường/Xã:</label>
-							<input type="text" class="form-control box_form_control"id="dc_phuongxa" placeholder="Phường/Xã" name="dc_phuongxa" value="${diachi.phuongxa}" readonly required>
+							<input type="text" class="form-control box_form_control"id="dc_phuongxa" placeholder="Phường/Xã" name="dc_phuongxa" value="${diachi.phuongxa}" readonly required maxlength="50">
 						</div>
 						<div class="form-group form-inline">
 							<label for="dc_sonha" class = "label_form_control">Số nhà:</label>
-							<input type="text" class="form-control box_form_control"id="dc_sonha" placeholder="Số nhà" name="dc_sonha" value="${diachi.sonha}" readonly required>
+							<input type="text" class="form-control box_form_control"id="dc_sonha" placeholder="Số nhà" name="dc_sonha" value="${diachi.sonha}" readonly required maxlength="50">
 						</div>
 						<input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
 						<div class="form_button">
@@ -331,6 +331,31 @@
 					document.getElementById("dc_phuongxa").value + ", " + document.getElementById("dc_sonha").value;
 			document.getElementById("diachi").value = diachi;
 		}
+		window.onload = function() {
+			// Lấy tất cả các input trừ input type date
+			var inputs = document.querySelectorAll('input:not([type="date"]):not([type="email"])');
+
+			// Duyệt qua từng input và thêm sự kiện 'input' để kiểm tra giá trị
+			inputs.forEach(function(input) {
+				input.addEventListener('input', function() {
+					// Kiểm tra nếu giá trị chứa ký tự đặc biệt
+					if (/[^a-zA-Z0-9\s]/.test(input.value)) {
+						// Nếu có, loại bỏ ký tự đặc biệt đó
+						input.value = input.value.replace(/[^a-zA-Z0-9\s]/g, '');
+					}
+				});
+
+				// Giới hạn độ dài tối đa của mỗi input
+				var maxLength = input.getAttribute('maxlength');
+				if (maxLength !== null) {
+					input.addEventListener('input', function() {
+						if (input.value.length > maxLength) {
+							input.value = input.value.slice(0, maxLength);
+						}
+					});
+				}
+			});
+		};
 	</script>
 <%}%>
 </body>

@@ -43,19 +43,19 @@
 			<h1>ĐỔI MẬT KHẨU</h1>
 			<div class="input-box">
 				<div class = "box_icon_login"><i class="fa-solid fa-user fa-2xl"></i></div>
-				<input type="text" name="username" id="username" placeholder="Tài khoản" required>
+				<input type="text" name="username" id="username" placeholder="Tài khoản" maxlength="30" required title="Tài khoản gồm ký tự thường, hoa, số và không quá 30 ký tự">
 			</div>
 			<div class="input-box">
 				<div class = "box_icon_login"><i class="fa-solid fa-lock fa-2xl"></i></div>
-				<input type="password" name="oldpassword" id ="oldpasaword" placeholder="Mật khẩu cũ" required>
+				<input type="password" name="oldpassword" id="oldpassword" placeholder="Mật khẩu cũ" maxlength="30" required>
 			</div>
 			<div class="input-box">
 				<div class = "box_icon_login"><i class="fa-solid fa-lock-open fa-2xl"></i></div>
-				<input type="password" name="newpassword" id = "newpassword" placeholder="Mật khẩu mới" required>
+				<input type="password" name="newpassword" id = "newpassword" placeholder="Mật khẩu mới" maxlength="30" required>
 			</div>
 			<div class="input-box">
 				<div class = "box_icon_login"><i class="fa-solid fa-lock-open fa-2xl"></i></div>
-				<input type="password" name="confirmnewpass" id="confirmnewpass" placeholder="Nhập lại mật khẩu" required>
+				<input type="password" name="confirmnewpass" id="confirmnewpass" placeholder="Nhập lại mật khẩu" maxlength="30" required>
 			</div>
 			<input type="hidden" name="csrfToken" value="<%= session.getAttribute("csrfToken") %>">
 			<div class="error_mess" style="color:red;">
@@ -75,9 +75,10 @@
 </div>
 <script>
 	function showpass() {
-		var x = document.getElementById("oldpasaword");
-			y = document.getElementById("newpassword");
-			z = document.getElementById("confirmnewpass");
+		var x = document.getElementById("oldpassword");
+		var y = document.getElementById("newpassword");
+		var z = document.getElementById("confirmnewpass");
+
 		if (x.type === "password") {
 			x.type = "text";
 			y.type = "text";
@@ -88,6 +89,48 @@
 			z.type = "password";
 		}
 	}
+	window.onload = function() {
+		// Lấy tất cả các input trừ input mật khẩu
+		var inputs = document.querySelectorAll('input:not([type="password"])');
+
+		// Duyệt qua từng input (trừ password) và thêm sự kiện 'input' để kiểm tra giá trị
+		inputs.forEach(function(input) {
+			input.addEventListener('input', function() {
+				// Kiểm tra nếu giá trị chứa ký tự đặc biệt
+				if (/[^a-zA-Z0-9\s]/.test(input.value)) {
+					// Nếu có, loại bỏ ký tự đặc biệt đó
+					input.value = input.value.replace(/[^a-zA-Z0-9\s]/g, '');
+				}
+
+				// Kiểm tra giới hạn độ dài tối đa của input
+				var maxLength = input.getAttribute('maxlength');
+				if (maxLength !== null && input.value.length > maxLength) {
+					input.value = input.value.slice(0, maxLength);
+				}
+			});
+		});
+
+		// Lấy input password
+		var passwordInput = document.querySelector('input[type="password"]');
+
+		// Thêm sự kiện 'blur' để kiểm tra mật khẩu sau khi người dùng nhập xong
+		passwordInput.addEventListener('blur', function() {
+			var password = passwordInput.value;
+
+			// Kiểm tra mật khẩu phải chứa ít nhất 8 ký tự, ít nhất 1 chữ hoa, 1 chữ thường, 1 số, và 1 ký tự đặc biệt
+			var passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+			if (!passwordPattern.test(password)) {
+				// Nếu mật khẩu không đáp ứng yêu cầu
+				// Báo cho người dùng và xóa tất cả ký tự trong ô input
+				passwordInput.setCustomValidity("Mật khẩu phải chứa ít nhất 8 ký tự, 1 chữ hoa, 1 chữ thường, 1 số, và 1 ký tự đặc biệt");
+			} else {
+				// Nếu mật khẩu đáp ứng yêu cầu, xóa thông báo lỗi
+				passwordInput.setCustomValidity('');
+			}
+		});
+	};
+
 </script>
 <%}%>
 </body>
